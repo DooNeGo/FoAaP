@@ -10,14 +10,14 @@ int main(){
 		printf("%d\n", a[i]);
 	}
 	max=a[0];
-	for (i=0; i<n; i++){
+	for (i=1; i<n; i++){
  		if (a[i]>max){
  		max=a[i];
 		u=i;
 		}
 	}
 	min=a[0];
-	for (i=0; i<n; i++){
+	for (i=1; i<n; i++){
  		if (a[i]<min){
  		min=a[i];
 		h=i;
