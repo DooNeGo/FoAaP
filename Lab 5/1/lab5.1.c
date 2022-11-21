@@ -11,7 +11,7 @@ int main(){
   printf("Generated matrix: \n");
   for (i=0; i<n; i++){
     for (j=0; j<m; j++){
-      a[i][j]=rand()%13+(-3);
+      a[i][j]=rand()%12+(-2);
       printf("%3d",a[i][j]);
     }
     printf("\n");
@@ -46,23 +46,24 @@ int main(){
     }
   printf("\n");
   }
-  for (j=0; j<=i; j++){
-    for (i=0; i<k; i++){
-      if (a[i][j]>0){
+  for (j=0; j<m; j++){
+    k=0;
+    for (i=0; i<=k; i++){
+      if (a[i][j]>=0){
         k++;
-        if (k=m){
+        if (k==n){
           j++;
           printf("The number of the column that doesn't contain any negative elements: %d\n", j);
-          break;
+          goto jump;
         }
       }
-      else if (j){
-        printf("\nNo negative elements\n");
-        break;
+      else if (a[i][j]<0){
+       k=0;
       }
-      else if (a[i][j]<0) k=0;
     }
   }
+  printf("\nAll columns contain negative elements \n");
+  jump:
   system("pause");
   return 0;
 }
