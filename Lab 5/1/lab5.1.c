@@ -4,7 +4,7 @@
 int main(){
   srand(time(0));
   int n, m, i, j, k=0, v=1;
-  printf("Enter n and m: ");
+  printf("Enter dimension of 2D matrix: ");
   scanf("%d %d", &n, &m);
   int a[n][m], u[n], s[m];
   for(i=0; i<n; i++) u[i]=0;
