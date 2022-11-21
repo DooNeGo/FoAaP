@@ -26,8 +26,9 @@ int main(){
 	a[u]=min;
 	a[h]=max;
 	printf("Min&Max: %d %d\n", min, max);
+        printf("Modified array: \n");
 	for(i=0; i<n; i++){
-		printf("--%d\n", a[i]);
+		printf("%d\n", a[i]);
 	}
 	system("pause");
 	return 0;
