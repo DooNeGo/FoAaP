@@ -13,7 +13,7 @@ int main(){
         printf("\n");
     }
     for (i=0; i<6; i=i+2){
-        min=a[0][0];
+        min=a[i][0];
         for (j=0; j<6; j++){
             if (a[i][j]<min)
                 min=a[i][j];
@@ -21,7 +21,7 @@ int main(){
         summin=summin+min;
     }
     for (i=1; i<6; i=i+2){
-        max=a[0][0];
+        max=a[i][0];
         for (j=0; j<6; j++){
             if (a[i][j]>max)
                 max=a[i][j];
