@@ -3,11 +3,12 @@
 #include <time.h>
 int main(){
   srand(time(0));
-  int n, m, i, j, k=0, v=1;
+  int n, m, i, j, k=0, v=1, h=0;
   printf("Enter dimension of 2D matrix: ");
   scanf("%d %d", &n, &m);
   int a[n][m], u[n], s[m];
   for (i=0; i<n; i++) u[i]=0;
+  for (i=0; i<m; i++) s[i]=0;
   // Генерация двумерного массива
   printf("Generated matrix: \n");
   for (i=0; i<n; i++){
@@ -30,11 +31,11 @@ int main(){
   printf("\nThe number of repeated elements in a row: \n");
   for (i=0; i<n; i++)
     printf("%d\n",u[i]);
-  // Сортировка
+  // Сортировка selectionSort
   for (i=0; i<n-1; i++){
     v=i;
     for (j=i+1; j<n; j++){
-      if (u[i]>u[j]) v=j;
+      if (u[v]>u[j]) v=j;
     }
     if (v!=i){
       for (k=0; k<m; k++){
@@ -42,6 +43,9 @@ int main(){
         a[i][k]=a[v][k];
         a[v][k]=s[k];
       }
+      h=u[i];
+      u[i]=u[v];
+      u[v]=h;
     }
   }
   printf("\nSorted Matrix: \n");
@@ -51,6 +55,8 @@ int main(){
     }
   printf("\n");
   }
+  printf("\nSorted array: \n");
+  for (i=0; i<n; i++) printf("%d\n", u[i]);
   // Определение номера первого столбца без отрицательных элементов
   for (j=0; j<m; j++){
     k=0;
@@ -59,7 +65,7 @@ int main(){
         k++;
         if (k==n){
           j++;
-          printf("The number of the column that doesn't contain any negative elements: %d\n", j);
+          printf("The number of the first column that doesn't contain any negative elements: %d\n", j);
           goto jump;
         }
       }
