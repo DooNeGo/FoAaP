@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 int main(){
 	int a,b,c,d,F,R=100;
 	for(a=0;a<=2;a++){
@@ -13,6 +12,7 @@ int main(){
 			}
 		}
 	}
-printf("Number of dialing methods: %d\n", F);
-system("pause");
+	printf("Number of dialing methods: %d\n", F);
+	system("pause");
+	return 0;
 }
