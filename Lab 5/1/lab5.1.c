@@ -34,7 +34,7 @@ int main(){
   for (i=0; i<n-1; i++){
     v=i;
     for (j=i+1; j<n; j++){
-      if (u[i]>u[j]) v=j;
+      if (u[v]>u[j]) v=j;
     }
     if (v!=i){
       for (k=0; k<m; k++){
