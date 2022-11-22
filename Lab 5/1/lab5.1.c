@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctime>
+#include <time.h>
 int main(){
   srand(time(0));
   int n, m, i, j, k=0, v=1;
@@ -8,6 +8,7 @@ int main(){
   scanf("%d %d", &n, &m);
   int a[n][m], u[n], s[m];
   for (i=0; i<n; i++) u[i]=0;
+  // Генерация двумерного массива
   printf("Generated matrix: \n");
   for (i=0; i<n; i++){
     for (j=0; j<m; j++){
@@ -16,6 +17,7 @@ int main(){
     }
     printf("\n");
   }
+  // Определение макс. кол-ва одинаковый элемен. в строках
   for (i=0; i<n; i++){
     for (j=0; j<m-1; j++){
       for (k=j+1; k<m; k++){
@@ -28,14 +30,17 @@ int main(){
   printf("\nThe number of repeated elements in a row: \n");
   for (i=0; i<n; i++)
     printf("%d\n",u[i]);
+  // Сортировка
   for (i=0; i<n-1; i++){
-    for (v=i+1; v<n; v++){
-      if (u[i]>u[v]){
-        for (k=0; k<m; k++){
-          s[k]=a[i][k];
-          a[i][k]=a[v][k];
-          a[v][k]=s[k];
-        }
+    v=i;
+    for (j=i+1; j<n; j++){
+      if (u[i]>u[j]) v=j;
+    }
+    if (v!=i){
+      for (k=0; k<m; k++){
+        s[k]=a[i][k];
+        a[i][k]=a[v][k];
+        a[v][k]=s[k];
       }
     }
   }
@@ -46,6 +51,7 @@ int main(){
     }
   printf("\n");
   }
+  // Определение номера первого столбца без отрицательных элементов
   for (j=0; j<m; j++){
     k=0;
     for (i=0; i<=k; i++){
@@ -57,9 +63,7 @@ int main(){
           goto jump;
         }
       }
-      else if (a[i][j]<0){
-       k=0;
-      }
+      else if (a[i][j]<0) k=0;
     }
   }
   printf("\nAll columns contain negative elements \n");
