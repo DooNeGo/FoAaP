@@ -18,7 +18,7 @@ int main(){
  			max=a[i];
 			u=i;
 		}
-		else if (a[i]<min){
+		if (a[i]<min){
  			min=a[i];
 			h=i;
 		}
