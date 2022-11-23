@@ -11,9 +11,9 @@ int main(){
 	for(i=0; i<n; i++){
 		a[i]=rand()%11;
 		printf("%3d", a[i]);
+		sum=sum+a[i];
 	}
 	printf("\n");
-	for (i=0; i<n; i++) sum=sum+a[i];
 	avg=sum/n;
 	for (i=0; i<n; i++)
 		if (a[i]>avg) h++;

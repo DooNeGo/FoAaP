@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 int main(){
-    int i, a[6][6], j, min=0, max=0, summin, summax;
+    int i, a[6][6], j, min, max, sum_min=0, sum_max=0;
     srand(time(0));
     printf("Generated matrix: \n");
     for (i=0; i<6; i++){
@@ -18,7 +18,7 @@ int main(){
             if (a[i][j]<min)
                 min=a[i][j];
         }
-        summin=summin+min;
+        sum_min=sum_min+min;
     }
     for (i=1; i<6; i=i+2){
         max=a[i][0];
@@ -26,10 +26,10 @@ int main(){
             if (a[i][j]>max)
                 max=a[i][j];
         }
-        summax=summax+max;
+        sum_max=sum_max+max;
     }
-    printf("The sum of the smallest elements of odd rows: %d\n", summin);
-    printf("The sum of the largest elements of even rows: %d\n", summax);
+    printf("The sum of the smallest elements of odd rows: %d\n", sum_min);
+    printf("The sum of the largest elements of even rows: %d\n", sum_max);
     system("pause");
     return 0;
 }
