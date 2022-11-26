@@ -42,7 +42,7 @@ void ReapetElemInaRow(int *matrix, int array[], int rows, int coloumns){
     }
 }
 void selectionSortbyMaxNofIdenEleminaRow(int arrayForWrite[],int arrayForSort[], int *matrix, int rows, int coloumns){
-    int min, i, j, k;
+    int min, i, j, k, temp;
     for (i=0; i<rows-1; i++){
     min=i;
         for (j=i+1; j<rows; j++){
@@ -56,6 +56,9 @@ void selectionSortbyMaxNofIdenEleminaRow(int arrayForWrite[],int arrayForSort[],
                 *(matrix+min*coloumns+k)=arrayForWrite[k];
             }
         }
+        temp=arrayForSort[i];
+        arrayForSort[i]=arrayForSort[min];
+        arrayForSort[min]=temp;
     }
 }
 void findaColumnNwithoutNegElem(int *matrix, int rows, int coloumns){
@@ -85,6 +88,7 @@ int main(){
     int a[n][m], a1[n], a2[m];
     int *matrix=&a[0][0];
     nulling_array(a1, n);
+    nulling_array(a2, m);
     printf("Generated matrix: \n");
     matrix_generate(matrix, n, m);
     matrix_output(matrix, n, m);
@@ -94,6 +98,8 @@ int main(){
     selectionSortbyMaxNofIdenEleminaRow(a2, a1, matrix, n, m);
     printf("Sorted matrix: \n");
     matrix_output(matrix, n, m);
+    printf("\nSorted array: \n");
+    array_output(a1, n);
     findaColumnNwithoutNegElem(matrix, n, m);
     system("pause");
     return 0;
