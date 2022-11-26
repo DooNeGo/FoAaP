@@ -7,6 +7,7 @@ void nulling_array(int array[], int size){
     }
 }
 void matrix_generate(int *matrix, int rows, int coloumns){
+    srand(time(0));
     for (int i=0; i<rows; i++){
         for (int j=0; j<coloumns; j++){
             *(matrix+i*coloumns+j)=rand()%12+(-2);
@@ -78,7 +79,6 @@ void findaColumnNwithoutNegElem(int *matrix, int rows, int coloumns){
     printf("\n");
 }
 int main(){
-    srand(time(0));
     int n, m;
     printf("Enter dimension of 2D matrix: ");
     scanf("%d%d", &n, &m);
