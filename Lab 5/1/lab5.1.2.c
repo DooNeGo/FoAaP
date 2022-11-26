@@ -1,16 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-void nulling_array(int array[], int size){
+void array_nulling(int array[], int size){
     for (int i=0; i<size; i++){
         array[i]=0;
     }
 }
-void matrix_generate(int *matrix, int rows, int coloumns){
+void matrix_generate(int *matrix, int rows, int columns){
     srand(time(0));
     for (int i=0; i<rows; i++){
-        for (int j=0; j<coloumns; j++){
-            *(matrix+i*coloumns+j)=rand()%12+(-2);
+        for (int j=0; j<columns; j++){
+            *(matrix+i*columns+j)=rand()%12+(-2);
         }
     }
 } 
@@ -20,20 +20,20 @@ void array_output(int array[], int size){
     }
     printf("\n");
 }
-void matrix_output(int *matrix, int rows, int coloumns){
+void matrix_output(int *matrix, int rows, int columns){
     for (int i=0; i<rows; i++){
-        for (int j=0; j<coloumns; j++){
-            printf("%3d", *(matrix+i*coloumns+j));
+        for (int j=0; j<columns; j++){
+            printf("%3d", *(matrix+i*columns+j));
         }
         printf("\n");
     }
 }
-void ReapetElemInaRow(int *matrix, int array[], int rows, int coloumns){
+void reapeat_elem_row(int *matrix, int array[], int rows, int columns){
     int i, j, k, counter=1;
     for (int i=0; i<rows; i++){
-        for (int j=0; j<coloumns-1; j++){
-            for (int k=j+1; k<coloumns; k++){
-                if (*(matrix+i*coloumns+j)==*(matrix+i*coloumns+k))
+        for (int j=0; j<columns-1; j++){
+            for (int k=j+1; k<columns; k++){
+                if (*(matrix+i*columns+j)==*(matrix+i*columns+k))
                     counter++;
             }
             if (counter>array[i]) array[i]=counter;
@@ -41,7 +41,7 @@ void ReapetElemInaRow(int *matrix, int array[], int rows, int coloumns){
         }
     }
 }
-void selectionSortbyMaxNofIdenEleminaRow(int arrayForWrite[],int arrayForSort[], int *matrix, int rows, int coloumns){
+void selectionSort_maxNum_identicElem_row(int arrayForWrite[],int arrayForSort[], int *matrix, int rows, int columns){
     int min, i, j, k, temp;
     for (i=0; i<rows-1; i++){
     min=i;
@@ -50,10 +50,10 @@ void selectionSortbyMaxNofIdenEleminaRow(int arrayForWrite[],int arrayForSort[],
                 min=j;
         }
         if (min!=i){
-            for (k=0; k<coloumns; k++){
-                arrayForWrite[k]=*(matrix+i*coloumns+k);
-                *(matrix+i*coloumns+k)=*(matrix+min*coloumns+k);
-                *(matrix+min*coloumns+k)=arrayForWrite[k];
+            for (k=0; k<columns; k++){
+                arrayForWrite[k]=*(matrix+i*columns+k);
+                *(matrix+i*columns+k)=*(matrix+min*columns+k);
+                *(matrix+min*columns+k)=arrayForWrite[k];
             }
         }
         temp=arrayForSort[i];
@@ -61,12 +61,12 @@ void selectionSortbyMaxNofIdenEleminaRow(int arrayForWrite[],int arrayForSort[],
         arrayForSort[min]=temp;
     }
 }
-void findaColumnNwithoutNegElem(int *matrix, int rows, int coloumns){
+void find_columnNum_wthout_negElem(int *matrix, int rows, int columns){
     int counter;
-    for (int j=0; j<coloumns; j++){
+    for (int j=0; j<columns; j++){
     counter=0;
         for (int i=0; i<=counter; i++){
-            if (*(matrix+i*coloumns+j)>=0){
+            if (*(matrix+i*columns+j)>=0){
                 counter++;
                 if (counter==rows){
                     j++;
@@ -74,7 +74,7 @@ void findaColumnNwithoutNegElem(int *matrix, int rows, int coloumns){
                     goto jump;
                 }
             }
-            else if (*(matrix+i*coloumns+j)<0) counter=0;
+            else if (*(matrix+i*columns+j)<0) counter=0;
         }
     }
     printf("\nAll columns contain negative elements \n");
@@ -87,20 +87,19 @@ int main(){
     scanf("%d%d", &n, &m);
     int a[n][m], a1[n], a2[m];
     int *matrix=&a[0][0];
-    nulling_array(a1, n);
-    nulling_array(a2, m);
+    array_nulling(a1, n);
     printf("Generated matrix: \n");
     matrix_generate(matrix, n, m);
     matrix_output(matrix, n, m);
-    ReapetElemInaRow(matrix, a1, n, m);
+    reapeat_elem_row(matrix, a1, n, m);
     printf("\nThe number of repeated elements in a row: \n");
     array_output(a1, n);
-    selectionSortbyMaxNofIdenEleminaRow(a2, a1, matrix, n, m);
+    selectionSort_maxNum_identicElem_row(a2, a1, matrix, n, m);
     printf("Sorted matrix: \n");
     matrix_output(matrix, n, m);
     printf("\nSorted array: \n");
     array_output(a1, n);
-    findaColumnNwithoutNegElem(matrix, n, m);
+    find_columnNum_wthout_negElem(matrix, n, m);
     system("pause");
     return 0;
 }
