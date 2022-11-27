@@ -13,7 +13,7 @@ void matrix_generate(int *matrix, int rows, int columns){
             *(matrix+i*columns+j)=rand()%12+(-2);
         }
     }
-} 
+}
 void array_output(int array[], int size){
     for (int i=0; i<size; i++){
         printf("%3d\n", array[i]);
@@ -77,7 +77,7 @@ void find_columnNum_wthout_negElem(int *matrix, int rows, int columns){
             else if (*(matrix+i*columns+j)<0) counter=0;
         }
     }
-    printf("\nAll columns contain negative elements \n");
+    printf("\nAll columns contain negative elements");
     jump:
     printf("\n");
 }
