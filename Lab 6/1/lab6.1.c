@@ -9,7 +9,6 @@ void array_output(float *array, int *size){
 }
 void array_generate(float *array, int *size){
 	srand(time(0));
-    printf("Generated array: \n");
 	for(int i=0; i<*size; i++){
 		*(array+i)=-3.0+8.0*rand()/(float)RAND_MAX;
 	}
@@ -46,6 +45,7 @@ int main(){
     printf("Enter array dimension: ");
     scanf("%d", &n);
     float a[n];
+    printf("Generated array: \n");
     array_generate(a, &n);
     array_output(a, &n);
     find_max_elem(a, &n);
