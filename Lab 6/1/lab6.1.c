@@ -43,7 +43,7 @@ void find_sumElem_lstPositive_num(float *array, int *size){
 }
 int main(){
     int n;
-    printf("Enter n: ");
+    printf("Enter array dimension: ");
     scanf("%d", &n);
     float a[n];
     array_generate(a, &n);
