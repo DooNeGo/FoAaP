@@ -28,7 +28,7 @@ void matrix_output(int *matrix, int rows, int columns){
         printf("\n");
     }
 }
-void reapeat_elemNum_row(int *matrix, int array[], int rows, int columns){
+void repeat_elemNum_row(int *matrix, int array[], int rows, int columns){
     int i, j, k, counter=1;
     for (i=0; i<rows; i++){
         for (j=0; j<columns-1; j++){
@@ -91,7 +91,7 @@ int main(){
     printf("Generated matrix: \n");
     matrix_generate(matrix, n, m);
     matrix_output(matrix, n, m);
-    reapeat_elemNum_row(matrix, a1, n, m);
+    repeat_elemNum_row(matrix, a1, n, m);
     printf("\nThe number of repeated elements in a row: \n");
     array_output(a1, n);
     selectionSort_maxNum_identicElem_row(a2, a1, matrix, n, m);

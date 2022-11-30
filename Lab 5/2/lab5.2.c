@@ -19,7 +19,7 @@ void matrix_output(int *matrix, int rows, int columns){
 }
 void find_sum_min_oddElem(int *matrix, int rows, int columns){
     int min, sum_min=0;
-    for (int i=0; i<rows; i=i+2){
+    for (int i=0; i<rows; i+=2){
         min=*(matrix+i*columns+0);
         for (int j=0; j<columns; j++){
             if (*(matrix+i*columns+j)<min)
@@ -31,7 +31,7 @@ void find_sum_min_oddElem(int *matrix, int rows, int columns){
 }
 void find_sum_max_evenElem(int *matrix, int rows, int columns){
     int max, sum_max=0;
-    for (int i=1; i<rows; i=i+2){
+    for (int i=1; i<rows; i+=2){
         max=*(matrix+i*columns+0);
         for (int j=0; j<columns; j++){
             if (*(matrix+i*columns+j)>max)
