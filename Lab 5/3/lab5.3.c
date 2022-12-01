@@ -53,7 +53,7 @@ void reverse_orderElem(int *matrix, int *columns, int *row_num){
                 max=k;
             }
         }
-        if (max!=i){
+        if (max!=j){
             temp=*(matrix+i**columns+j);
             *(matrix+i**columns+j)=*(matrix+i**columns+max);
             *(matrix+i**columns+max)=temp;
