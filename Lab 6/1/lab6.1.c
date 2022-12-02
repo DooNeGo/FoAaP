@@ -22,20 +22,19 @@ void find_max_elem(float *array, int *size){
 	}
     printf("Max element of array: %0.2f\n", max);
 }
-int *find_lastNum_positive_num(float *array, int *size){
-    int *numLast_positive_num;
+void find_lastNum_positive_num(float *array, int *size, int *numLast_positive_num){
     for (int i=0; i<*size; i++){
         if ((*(array+i))>0){
-            numLast_positive_num=&i;
+            *numLast_positive_num=i;
         }
     }
-    printf("Number of the last positive number: %d\n", *numLast_positive_num);
-    return numLast_positive_num;
+    printf("Number of the last positive number: %d\n", *numLast_positive_num+1);
 }
 void find_sumElem_lstPositive_num(float *array, int *size){
     float sum=0;
-    int *numLast_positive_num=find_lastNum_positive_num(array, size);
-    for (int i=0; i<*numLast_positive_num-1; i++){
+    int numLast_positive_num=0;
+    find_lastNum_positive_num(array, size, &numLast_positive_num);
+    for (int i=0; i<numLast_positive_num; i++){
         sum=sum+*(array+i);
     }
     printf("The sum of the array elements up to the last positive element: %0.2f\n", sum);
@@ -44,12 +43,13 @@ int main(){
     int n;
     printf("Enter array dimension: ");
     scanf("%d", &n);
-    float a[n];
+    float *a=(float*)calloc(n,sizeof(int));
     printf("Generated array: \n");
     array_generate(a, &n);
     array_output(a, &n);
     find_max_elem(a, &n);
     find_sumElem_lstPositive_num(a, &n);
+    free(a);
     system("pause");
     return 0;
 }
