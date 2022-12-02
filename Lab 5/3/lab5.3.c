@@ -20,10 +20,11 @@ void findNum_firstRow_ordered_ascending_order(int *matrix, int *rows, int *colum
     }
     jump:;
 }
-void matrix_generate(int *matrix, int *rows, int *columns, int *row_num){
+void matrix_generate(int *matrix, int *rows, int *columns, int *row_num, int *repeats){
     srand(time(0));
     int i, j;
     while (*row_num==-1){
+        *repeats=*repeats+1;
         for (i=0; i<*rows; i++){
             for (j=0; j<*columns; j++){
                 *(matrix+i**columns+j)=rand()%14-2;
@@ -57,17 +58,18 @@ void reverse_orderElem(int *matrix, int *columns, int *row_num){
     }
 }
 int main(){
-    int n, m, row_num=-1;
+    int n, m, row_num=-1, repeats=0;
     printf("Enter dimension of 2D matrix: ");
     scanf("%d%d", &n, &m);
     int a[n][m], a1[m], *matrix=&a[0][0];
-    matrix_generate(matrix, &n ,&m, &row_num);
+    matrix_generate(matrix, &n ,&m, &row_num, &repeats);
     printf("Generated matrix: \n");
     matrix_output(matrix, &n, &m);
     printf("Row number whose elements are sorted in ascending order: %d\n", row_num+1);
     printf("New matrix: \n");
     reverse_orderElem(matrix, &m, &row_num);
     matrix_output(matrix, &n, &m);
+    printf("Number of generated arrays: %d\n", repeats);
     system("pause");
     return 0;
 }
