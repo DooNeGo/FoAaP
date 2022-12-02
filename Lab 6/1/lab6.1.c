@@ -43,13 +43,13 @@ int main(){
     int n;
     printf("Enter array dimension: ");
     scanf("%d", &n);
-    float *a=(float*)calloc(n,sizeof(int));
+    float *array=(float*)calloc(n,sizeof(int));
     printf("Generated array: \n");
-    array_generate(a, &n);
-    array_output(a, &n);
-    find_max_elem(a, &n);
-    find_sumElem_lstPositive_num(a, &n);
-    free(a);
+    array_generate(array, &n);
+    array_output(array, &n);
+    find_max_elem(array, &n);
+    find_sumElem_lstPositive_num(array, &n);
+    free(array);
     system("pause");
     return 0;
 }
