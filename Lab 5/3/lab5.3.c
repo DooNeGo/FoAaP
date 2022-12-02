@@ -61,7 +61,7 @@ int main(){
     int n, m, row_num=-1, repeats=0;
     printf("Enter dimension of 2D matrix: ");
     scanf("%d%d", &n, &m);
-    int a[n][m], a1[m], *matrix=&a[0][0];
+    int *matrix=(int*)calloc(n*m, sizeof(int));
     matrix_generate(matrix, &n ,&m, &row_num, &repeats);
     printf("Generated matrix: \n");
     matrix_output(matrix, &n, &m);
