@@ -41,19 +41,14 @@ void matrix_output(int *matrix, int *rows, int *columns){
         printf("\n");
     }
 }
-void reverse_orderElem(int *matrix, int *columns, int *row_num){
-    int temp, j, i=*row_num, k, max;
-    for (j=0; j<*columns-1; j++){
-        max=j;
-        for (k=j+1; k<*columns; k++){
-            if (*(matrix+i**columns+max)<*(matrix+i**columns+k)){
-                max=k;
-            }
-        }
-        if (max!=j){
+void reverse_rowElem(int *matrix, int *columns, int *row_num){
+    int temp, i=*row_num, j, k;
+    for (j=0; j<*columns/2.0; j++){
+        k=*columns-(j+1);
+        if (k!=j){
             temp=*(matrix+i**columns+j);
-            *(matrix+i**columns+j)=*(matrix+i**columns+max);
-            *(matrix+i**columns+max)=temp;
+            *(matrix+i**columns+j)=*(matrix+i**columns+k);
+            *(matrix+i**columns+k)=temp;
         }
     }
 }
@@ -67,7 +62,7 @@ int main(){
     matrix_output(matrix, &n, &m);
     printf("Row number whose elements are sorted in ascending order: %d\n", row_num+1);
     printf("New matrix: \n");
-    reverse_orderElem(matrix, &m, &row_num);
+    reverse_rowElem(matrix, &m, &row_num);
     matrix_output(matrix, &n, &m);
     printf("Number of generated arrays: %d\n", repeats);
     system("pause");
