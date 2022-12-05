@@ -41,7 +41,7 @@ void repeat_elemNum_row(int *matrix, int array[], int rows, int columns){
         }
     }
 }
-void selectionSort_maxNum_identicElem_row(int array_temp[],int array_sort[], int *matrix, int rows, int columns){
+void selectionSort_maxNum_identicElem_row(int array_sort[], int *matrix, int rows, int columns){
     int min, i, j, k, temp;
     for (i=0; i<rows-1; i++){
     min=i;
@@ -51,9 +51,9 @@ void selectionSort_maxNum_identicElem_row(int array_temp[],int array_sort[], int
         }
         if (min!=i){
             for (k=0; k<columns; k++){
-                array_temp[k]=*(matrix+i*columns+k);
+                temp=*(matrix+i*columns+k);
                 *(matrix+i*columns+k)=*(matrix+min*columns+k);
-                *(matrix+min*columns+k)=array_temp[k];
+                *(matrix+min*columns+k)=temp;
             }
         }
         temp=array_sort[i];
@@ -64,7 +64,7 @@ void selectionSort_maxNum_identicElem_row(int array_temp[],int array_sort[], int
 void find_columnNum_wthout_negElem(int *matrix, int rows, int columns){
     int counter;
     for (int j=0; j<columns; j++){
-    counter=0;
+        counter=0;
         for (int i=0; i<=counter; i++){
             if (*(matrix+i*columns+j)>=0){
                 counter++;
@@ -85,7 +85,7 @@ int main(){
     int n, m;
     printf("Enter dimension of 2D matrix: ");
     scanf("%d%d", &n, &m);
-    int a[n][m], a1[n], a2[m];
+    int a[n][m], a1[n];
     int *matrix=&a[0][0];
     array_nulling(a1, n);
     printf("Generated matrix: \n");
@@ -94,7 +94,7 @@ int main(){
     repeat_elemNum_row(matrix, a1, n, m);
     printf("\nThe number of repeated elements in a row: \n");
     array_output(a1, n);
-    selectionSort_maxNum_identicElem_row(a2, a1, matrix, n, m);
+    selectionSort_maxNum_identicElem_row(a1, matrix, n, m);
     printf("Sorted matrix: \n");
     matrix_output(matrix, n, m);
     printf("\nSorted array: \n");
