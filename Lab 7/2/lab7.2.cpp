@@ -43,6 +43,7 @@ int main()
     printf("Enter the string: ");
     char *string = writeString();
     counttheNumberofSpaces(string);
+    free(string);
     system("pause");
     return 0;
 }

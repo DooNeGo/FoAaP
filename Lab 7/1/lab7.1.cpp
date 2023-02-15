@@ -88,6 +88,7 @@ int main()
     changetheOrderofElements(matrix, rowSortedDescending, columns);
     printf("Changed matrix:\n");
     showMatrix(matrix, rows, columns);
+    free(matrix);
     system("pause");
     return 0;
 }
