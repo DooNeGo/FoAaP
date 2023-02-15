@@ -20,11 +20,12 @@ void counttheNumberofSpaces(char *string)
     }
     printf("Number of spaces: %d\n", counter);
 }
-char *writeString()
+char *writeString(int sizeString)
 {
     char ch;
-    char *string = (char *)malloc(sizeof(char) * 100);
-    for (int i = 0; i < 100; i++)
+    char *string = (char *)malloc(sizeof(char) * sizeString);
+    fflush(stdin);
+    for (int i = 0; i < sizeString - 1; i++)
     {
         scanf("%c", &ch);
         if (ch != '\n')
@@ -36,12 +37,14 @@ char *writeString()
             break;
         }
     }
+    string[sizeString - 1] = '\000';
+    fflush(stdin);
     return string;
 }
 int main()
 {
     printf("Enter the string: ");
-    char *string = writeString();
+    char *string = writeString(100);
     counttheNumberofSpaces(string);
     free(string);
     system("pause");
