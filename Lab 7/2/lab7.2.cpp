@@ -1,18 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void counttheNumberofSpaces(char *string)
+void counttheNumberofSpaces(char *array)
 {
     int counter = 0;
     for (int i = 0; i < 100; i++)
     {
-        if (string[i] == '\000')
+        if (array[i] == '\000')
         {
             break;
         }
         else
         {
-            if (string[i] == ' ')
+            if (array[i] == ' ')
             {
                 counter++;
             }
@@ -20,33 +20,35 @@ void counttheNumberofSpaces(char *string)
     }
     printf("Number of spaces: %d\n", counter);
 }
-char *writeString(int sizeString)
+char *writeString(int size)
 {
     char ch;
-    char *string = (char *)malloc(sizeof(char) * sizeString);
+    char *array=(char *)malloc(sizeof(char)*size);
+    int counter = 0;
     fflush(stdin);
-    for (int i = 0; i < sizeString - 1; i++)
+    for (int i = 0; i < size - 1; i++)
     {
         scanf("%c", &ch);
         if (ch != '\n')
         {
-            string[i] = ch;
+            array[i] = ch;
+            counter++;
         }
         else
         {
             break;
         }
     }
-    string[sizeString - 1] = '\000';
+    array[counter] = '\000';
     fflush(stdin);
-    return string;
+    return array;
 }
 int main()
 {
     printf("Enter the string: ");
-    char *string = writeString(100);
-    counttheNumberofSpaces(string);
-    free(string);
+    char *array = writeString(100);
+    counttheNumberofSpaces(array);
+    free(array);
     system("pause");
     return 0;
 }
