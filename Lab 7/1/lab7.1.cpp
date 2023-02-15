@@ -63,14 +63,18 @@ void showMatrix(int *matrix, int rows, int columns)
         printf("\n");
     }
 }
-void changetheOrderofElements(int *matrix, int rowSortedDescending, int columns)
+void swap(int *numi, int *numj)
 {
     int temp;
+    temp=*numi;
+    *numi=*numj;
+    *numj=temp;
+}
+void changetheOrderofElements(int *matrix, int rowSortedDescending, int columns)
+{
     for (int i = 0; i < columns / 2; i++)
     {
-        temp = *(matrix + rowSortedDescending * columns + i);
-        *(matrix + rowSortedDescending * columns + i) = *(matrix + rowSortedDescending * columns + columns - i - 1);
-        *(matrix + rowSortedDescending * columns + columns - i - 1) = temp;
+        swap((matrix + rowSortedDescending * columns + i), (matrix + rowSortedDescending * columns + columns - i - 1));
     }
 }
 int main()
