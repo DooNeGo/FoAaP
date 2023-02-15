@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
 
 struct Human
 {
@@ -35,7 +34,9 @@ void showPeople(struct Human *array, int sizeArray)
         }
     }
     else
-        printf("There are no people");
+    {
+        printf("There are no people\n");
+    }
 }
 int checkRepetition()
 {
@@ -223,7 +224,7 @@ void searchMatches(char *string, int parameter, int number)
     struct Human *array = (struct Human *)malloc(sizeof(struct Human) * sizePeople);
     for (int i = 0; i < sizePeople; i++)
     {
-        if ((memcmp(people[i].Surname, string, numLetters) == 0 && parameter == 1) || (memcmp(people[i].Name, string, numLetters) == 0 && parameter == 2) || (memcmp(people[i].Patronymic, string, numLetters) == 0 && parameter == 3) || (memcmp(people[i].HomeAddress, string, numLetters)==0 && parameter == 4) || (memcmp(people[i].PhoneNumber, string, numLetters)==0 && parameter == 5) || (people[i].Age == number && parameter == 6))
+        if ((memcmp(people[i].Surname, string, numLetters) == 0 && parameter == 1) || (memcmp(people[i].Name, string, numLetters) == 0 && parameter == 2) || (memcmp(people[i].Patronymic, string, numLetters) == 0 && parameter == 3) || (memcmp(people[i].HomeAddress, string, numLetters) == 0 && parameter == 4) || (memcmp(people[i].PhoneNumber, string, numLetters) == 0 && parameter == 5) || (people[i].Age == number && parameter == 6))
         {
             array[counter] = people[i];
             counter++;
@@ -365,57 +366,50 @@ void editHumanMenu()
     int parameter;
     while (1)
     {
-        if (sizePeople > 0)
+        int humanNumber = doChoice(people, sizePeople);
+        if (humanNumber == 0)
         {
-            int humanNumber = doChoice(people, sizePeople);
-            if (humanNumber == 0)
-            {
-                return;
-            }
-            bool stop = false;
-            while (!stop)
-            {
-                system("cls");
-                printf("FIO: %-s %-s %-s  Home address: %-s  Phone number: %-s  Age: %-2d\n", people[humanNumber - 1].Surname, people[humanNumber - 1].Name, people[humanNumber - 1].Patronymic, people[humanNumber - 1].HomeAddress, people[humanNumber - 1].PhoneNumber, people[humanNumber - 1].Age);
-                printf("1 - Edit surname\n2 - Edit name\n3 - Edit patronymic\n4 - Edit home address\n5 - Edit phone number\n6 - Edit age\n0 - Return\n");
-                scanf("%d", &parameter);
-                if (parameter == 1)
-                {
-                    editHuman(humanNumber, "surname");
-                }
-                else if (parameter == 2)
-                {
-                    editHuman(humanNumber, "name");
-                }
-                else if (parameter == 3)
-                {
-                    editHuman(humanNumber, "patronymic");
-                }
-                else if (parameter == 4)
-                {
-                    editHuman(humanNumber, "home address");
-                }
-                else if (parameter == 5)
-                {
-                    editHuman(humanNumber, "phone number");
-                }
-                else if (parameter == 6)
-                {
-                    editHuman(humanNumber, "age");
-                }
-                else if (parameter == 0)
-                {
-                    stop = true;
-                }
-                else if (parameter < 0 || parameter > 6)
-                {
-                    showMessage("Wrong number, please try again");
-                }
-            }
+            return;
         }
-        else
+        bool stop = false;
+        while (!stop)
         {
-            showMessage("There are no people");
+            system("cls");
+            printf("FIO: %-s %-s %-s  Home address: %-s  Phone number: %-s  Age: %-2d\n", people[humanNumber - 1].Surname, people[humanNumber - 1].Name, people[humanNumber - 1].Patronymic, people[humanNumber - 1].HomeAddress, people[humanNumber - 1].PhoneNumber, people[humanNumber - 1].Age);
+            printf("1 - Edit surname\n2 - Edit name\n3 - Edit patronymic\n4 - Edit home address\n5 - Edit phone number\n6 - Edit age\n0 - Return\n");
+            scanf("%d", &parameter);
+            if (parameter == 1)
+            {
+                editHuman(humanNumber, "surname");
+            }
+            else if (parameter == 2)
+            {
+                editHuman(humanNumber, "name");
+            }
+            else if (parameter == 3)
+            {
+                editHuman(humanNumber, "patronymic");
+            }
+            else if (parameter == 4)
+            {
+                editHuman(humanNumber, "home address");
+            }
+            else if (parameter == 5)
+            {
+                editHuman(humanNumber, "phone number");
+            }
+            else if (parameter == 6)
+            {
+                editHuman(humanNumber, "age");
+            }
+            else if (parameter == 0)
+            {
+                stop = true;
+            }
+            else if (parameter < 0 || parameter > 6)
+            {
+                showMessage("Wrong number, please try again");
+            }
         }
     }
 }
@@ -424,17 +418,16 @@ void deleteHuman()
     while (1)
     {
         int humanNumber = doChoice(people, sizePeople);
-        if (humanNumber==0)
+        if (humanNumber == 0)
         {
             return;
         }
-            for (int i = humanNumber - 1; i < sizePeople - 1; i++)
-            {
-                people[i]=people[i+1];
-            }
-            sizePeople--;
-            showMessage("Delete human successfully");
-            return;
+        for (int i = humanNumber - 1; i < sizePeople - 1; i++)
+        {
+            people[i] = people[i + 1];
+        }
+        sizePeople--;
+        showMessage("Delete human successfully");
     }
 }
 void menu()
@@ -465,6 +458,10 @@ void menu()
         else if (parameter == 4)
         {
             editHumanMenu();
+        }
+        else if (parameter == 5)
+        {
+            deleteHuman();
         }
         else if (parameter == 6)
         {
