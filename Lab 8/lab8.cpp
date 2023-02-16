@@ -9,7 +9,7 @@ struct Human
     char Patronymic[30];
     char HomeAddress[30];
     char PhoneNumber[30];
-    int Age;
+    char Age[30];
 } people[20];
 
 int sizePeople = 0;
@@ -21,7 +21,7 @@ void showMessage(const char *msg)
     printf("%s\n", msg);
     system("pause");
 }
-void showPeople(struct Human *array, int sizeArray)
+void showArray(struct Human *array, int sizeArray)
 {
     system("cls");
     fflush(stdin);
@@ -30,7 +30,7 @@ void showPeople(struct Human *array, int sizeArray)
         printf("A list of people:\n");
         for (int i = 0; i < sizeArray; i++)
         {
-            printf("%2d. FIO: %-s %-s %-s  Home address: %-s  Phone number: %-s  Age: %-2d\n", i + 1, array[i].Surname, array[i].Name, array[i].Patronymic, array[i].HomeAddress, array[i].PhoneNumber, array[i].Age);
+            printf("%2d. FIO: %-s %-s %-s  Home address: %-s  Phone number: %-s  Age: %-2s\n", i + 1, array[i].Surname, array[i].Name, array[i].Patronymic, array[i].HomeAddress, array[i].PhoneNumber, array[i].Age);
         }
     }
     else
@@ -45,7 +45,7 @@ int doRepetitionCheck(char *startofArray, int arrayElementNumbertoCompare, int a
     {
         for (int i = 0; i < arraySize * structureSize; i += structureSize)
         {
-            if (strcmp(startofArray + (arrayElementNumbertoCompare) * structureSize + j, startofArray + i + j) == 0)
+            if (strcmp(startofArray + arrayElementNumbertoCompare * structureSize + j, startofArray + i + j) == 0)
             {
                 counter++;
             }
@@ -98,9 +98,8 @@ void addHuman()
         {
             scanf("%s%s", &people[sizePeople].Name, &people[sizePeople].Patronymic);
         }
-    } while (doRepetitionCheck(people[0].Surname, sizePeople, sizePeople, sizeof(struct Human), 3, 30));
+    } while (doRepetitionCheck(people[0].Surname, sizePeople, sizePeople, sizeof(struct Human), 3, sizeof(struct Human) / 6));
     printf("Enter home address(0 - Return): ");
-    fflush(stdin);
     writeString(people[sizePeople].HomeAddress, 30);
     if (people[sizePeople].HomeAddress[0] == '0')
     {
@@ -113,8 +112,8 @@ void addHuman()
         return;
     }
     printf("Enter age (0 - Return): ");
-    scanf("%d", &people[sizePeople].Age);
-    if (people[sizePeople].Age == 0)
+    scanf("%s", &people[sizePeople].Age);
+    if (people[sizePeople].Age[0] == '0')
     {
         return;
     }
@@ -174,7 +173,7 @@ struct Human *sortEngine(int parameter, int parameter1)
                     num = k;
                 else if (parameter == 4 && memcmp(array[num].HomeAddress, array[k].HomeAddress, 1) < 0)
                     num = k;
-                else if (parameter == 5 && array[num].Age > array[k].Age)
+                else if (parameter == 5 && memcmp(array[num].Age, array[k].Age, 1) < 0)
                     num = k;
             }
             else if (parameter1 == 2)
@@ -187,7 +186,7 @@ struct Human *sortEngine(int parameter, int parameter1)
                     num = k;
                 else if (parameter == 4 && memcmp(array[num].HomeAddress, array[k].HomeAddress, 1) > 0)
                     num = k;
-                else if (parameter == 5 && array[num].Age < array[k].Age)
+                else if (parameter == 5 && memcmp(array[num].Age, array[k].Age, 1) > 0)
                     num = k;
             }
         }
@@ -213,7 +212,7 @@ void sortBy()
             if (parameter1 == 1 || parameter1 == 2)
             {
                 struct Human *sortedArray = sortEngine(parameter, parameter1);
-                showPeople(sortedArray, sizePeople);
+                showArray(sortedArray, sizePeople);
                 system("pause");
                 free(sortedArray);
             }
@@ -228,106 +227,55 @@ void sortBy()
         }
     }
 }
-void searchMatches(char *string, int parameter, int number)
+void searchEngine(struct Human *source, int sizeSource, char *string, int singleElementSize, int structureSize)
 {
     int counter = 0;
     int numLetters = strlen(string);
-    struct Human *array = (struct Human *)malloc(sizeof(struct Human) * sizePeople);
-    for (int i = 0; i < sizePeople; i++)
+    struct Human *array = (struct Human *)malloc(sizeof(struct Human) * sizeSource);
+    for (int i = 0; i < sizeSource; i++)
     {
-        if ((memcmp(people[i].Surname, string, numLetters) == 0 && parameter == 1) || (memcmp(people[i].Name, string, numLetters) == 0 && parameter == 2) || (memcmp(people[i].Patronymic, string, numLetters) == 0 && parameter == 3) || (memcmp(people[i].HomeAddress, string, numLetters) == 0 && parameter == 4) || (memcmp(people[i].PhoneNumber, string, numLetters) == 0 && parameter == 5) || (people[i].Age == number && parameter == 6))
+        for (int j = 0; j < structureSize; j += singleElementSize)
         {
-            array[counter] = people[i];
-            counter++;
+
+            if (memcmp(source[i].Surname + j, string, numLetters) == 0)
+            {
+                array[counter] = source[i];
+                counter++;
+            }
         }
     }
     if (counter > 0)
     {
-        showPeople(array, counter);
+        showArray(array, counter);
     }
     printf("Number of matches: %d\n", counter);
     free(array);
     system("pause");
 }
-void search(int parameter, const char *parameter1)
-{
-    char *string = (char *)malloc(sizeof(char) * 30);
-    int number;
-    system("cls");
-    fflush(stdin);
-    printf("Enter %s for search(0 - Return): ", parameter1);
-    if (parameter > 0 && parameter < 6)
-    {
-        writeString(string, 30);
-    }
-    else if (parameter == 6)
-    {
-        scanf("%d", &number);
-    }
-    if ((parameter > 0 && parameter < 6 && string[0] == '0') || (parameter == 6 && number == 0))
-    {
-        return;
-    }
-    searchMatches(string, parameter, number);
-}
 void searchMenu()
 {
-    int parameter;
+    int counter = 0;
+    char *string = (char *)malloc(sizeof(char) * 30);
     while (1)
     {
         system("cls");
-        printf("1 - Search by surname\n2 - Search by name\n3 - Search by patronymic\n4 - Search by home address\n5 - Search by phone number\n6 - Search by age\n0 - Return\n");
-        scanf("%d", &parameter);
-        if (parameter == 1)
-        {
-            search(parameter, "surname");
-        }
-        else if (parameter == 2)
-        {
-            search(parameter, "name");
-        }
-        else if (parameter == 3)
-        {
-            search(parameter, "patronymic");
-        }
-        else if (parameter == 4)
-        {
-            search(parameter, "home address");
-        }
-        else if (parameter == 5)
-        {
-            search(parameter, "phone number");
-        }
-        else if (parameter == 6)
-        {
-            search(parameter, "age");
-        }
-        else if (parameter == 0)
+        printf("Search(0 - Return): ");
+        writeString(string, 30);
+        if (string[0] == '0')
         {
             return;
         }
-        else
-        {
-            showMessage("Wrong number, please try again");
-        }
+        searchEngine(people, sizePeople, string, sizeof(struct Human) / 6, sizeof(struct Human));
     }
 }
 void editHuman(int humanNumber, const char *parameter)
 {
     char *tempStr = (char *)malloc(sizeof(char) * 30);
-    int tempNum = 1;
     system("cls");
     fflush(stdin);
     printf("Enter new %s(0 - Return): ", parameter);
-    if (parameter != "age")
-    {
-        writeString(tempStr, 30);
-    }
-    else
-    {
-        scanf("%d", &tempNum);
-    }
-    if (tempStr[0] == '0' || tempNum == 0)
+    writeString(tempStr, 30);
+    if (tempStr[0] == '0')
     {
         return;
     }
@@ -353,7 +301,7 @@ void editHuman(int humanNumber, const char *parameter)
     }
     else if (parameter == "age")
     {
-        people[humanNumber - 1].Age = tempNum;
+        strcpy(people[humanNumber - 1].Age, tempStr);
     }
     showMessage("The change was successful");
 }
@@ -362,7 +310,7 @@ int doChoice(struct Human *array, int size)
     int humanNumber;
     do
     {
-        showPeople(array, size);
+        showArray(array, size);
         printf("Enter the human's number(0 - Return): ");
         scanf("%d", &humanNumber);
         if (humanNumber < 0 || humanNumber > sizePeople)
@@ -386,7 +334,7 @@ void editHumanMenu()
         while (!stop)
         {
             system("cls");
-            printf("FIO: %-s %-s %-s  Home address: %-s  Phone number: %-s  Age: %-2d\n", people[humanNumber - 1].Surname, people[humanNumber - 1].Name, people[humanNumber - 1].Patronymic, people[humanNumber - 1].HomeAddress, people[humanNumber - 1].PhoneNumber, people[humanNumber - 1].Age);
+            printf("FIO: %-s %-s %-s  Home address: %-s  Phone number: %-s  Age: %-2s\n", people[humanNumber - 1].Surname, people[humanNumber - 1].Name, people[humanNumber - 1].Patronymic, people[humanNumber - 1].HomeAddress, people[humanNumber - 1].PhoneNumber, people[humanNumber - 1].Age);
             printf("1 - Edit surname\n2 - Edit name\n3 - Edit patronymic\n4 - Edit home address\n5 - Edit phone number\n6 - Edit age\n0 - Return\n");
             scanf("%d", &parameter);
             if (parameter == 1)
@@ -476,7 +424,7 @@ void menu()
         }
         else if (parameter == 6)
         {
-            showPeople(people, sizePeople);
+            showArray(people, sizePeople);
             system("pause");
         }
         else if (parameter < 0 || parameter > 6)
