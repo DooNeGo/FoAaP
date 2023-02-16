@@ -4,11 +4,11 @@
 
 struct Human
 {
-    char Surname[20];
-    char Name[20];
-    char Patronymic[20];
+    char Surname[30];
+    char Name[30];
+    char Patronymic[30];
     char HomeAddress[30];
-    char PhoneNumber[15];
+    char PhoneNumber[30];
     int Age;
 } people[20];
 
@@ -38,17 +38,28 @@ void showPeople(struct Human *array, int sizeArray)
         printf("There are no people\n");
     }
 }
-int checkRepetition()
+int doRepetitionCheck(char *startofArray, int arrayElementNumbertoCompare, int arraySize, int structureSize, int numberofElementstoCompare, int singleElementSize)
 {
-    for (int i = 0; i < sizePeople; i++)
+    int counter = 0;
+    for (int j = 0; j < numberofElementstoCompare * singleElementSize; j += singleElementSize)
     {
-        if (strcmp(people[sizePeople].Surname, people[i].Surname) == 0 && strcmp(people[sizePeople].Name, people[i].Name) == 0 && strcmp(people[sizePeople].Patronymic, people[i].Patronymic) == 0)
+        for (int i = 0; i < arraySize * structureSize; i += structureSize)
         {
-            showMessage("This human already exists");
-            return true;
+            if (strcmp(startofArray + (arrayElementNumbertoCompare) * structureSize + j, startofArray + i + j) == 0)
+            {
+                counter++;
+            }
         }
     }
-    return false;
+    if (counter == numberofElementstoCompare)
+    {
+        showMessage("This human already exists");
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 void writeString(char *array, int size)
 {
@@ -87,7 +98,7 @@ void addHuman()
         {
             scanf("%s%s", &people[sizePeople].Name, &people[sizePeople].Patronymic);
         }
-    } while (checkRepetition());
+    } while (doRepetitionCheck(people[0].Surname, sizePeople, sizePeople, sizeof(struct Human), 3, 30));
     printf("Enter home address(0 - Return): ");
     fflush(stdin);
     writeString(people[sizePeople].HomeAddress, 30);
