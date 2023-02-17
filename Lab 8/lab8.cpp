@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+int sizePeople = 0;
+
 struct Human
 {
     char Surname[30];
@@ -10,10 +12,7 @@ struct Human
     char HomeAddress[30];
     char PhoneNumber[30];
     char Age[30];
-} people[20];
-
-int sizePeople = 0;
-
+} *people = (struct Human *)malloc(sizeof(struct Human) * (sizePeople + 1));
 void showMessage(const char *msg)
 {
     system("cls");
@@ -24,7 +23,7 @@ void showMessage(const char *msg)
 void showArray(struct Human *array, int sizeArray)
 {
     system("cls");
-    fflush(stdin);
+
     if (sizeArray > 0)
     {
         printf("A list of people:\n");
@@ -38,14 +37,14 @@ void showArray(struct Human *array, int sizeArray)
         printf("There are no people\n");
     }
 }
-int doRepetitionCheck(char *startofArray, int arrayElementNumbertoCompare, int arraySize, int structureSize, int numberofElementstoCompare, int singleElementSize)
+int doRepetitionCheck(char *startofArray, char *startofArray1, int arraySize, int structureSize, int numberofElementstoCompare, int singleElementSize)
 {
     int counter = 0;
     for (int j = 0; j < numberofElementstoCompare * singleElementSize; j += singleElementSize)
     {
         for (int i = 0; i < arraySize * structureSize; i += structureSize)
         {
-            if (strcmp(startofArray + arrayElementNumbertoCompare * structureSize + j, startofArray + i + j) == 0)
+            if (strcmp(startofArray1 + j, startofArray + i + j) == 0)
             {
                 counter++;
             }
@@ -84,41 +83,44 @@ void writeString(char *array, int size)
 }
 void addHuman()
 {
+    struct Human temp;
     do
     {
         system("cls");
         fflush(stdin);
         printf("Enter FIO (0 - Return): ");
-        scanf("%s", &people[sizePeople].Surname);
-        if (people[sizePeople].Surname[0] == '0')
+        scanf("%s", &temp.Surname);
+        if (temp.Surname[0] == '0')
         {
             return;
         }
         else
         {
-            scanf("%s%s", &people[sizePeople].Name, &people[sizePeople].Patronymic);
+            scanf("%s%s", &temp.Name, &temp.Patronymic);
         }
-    } while (doRepetitionCheck(people[0].Surname, sizePeople, sizePeople, sizeof(struct Human), 3, sizeof(struct Human) / 6));
+    } while (doRepetitionCheck(people[0].Surname, temp.Surname, sizePeople, sizeof(struct Human), 3, sizeof(struct Human) / 6));
     printf("Enter home address(0 - Return): ");
-    writeString(people[sizePeople].HomeAddress, 30);
-    if (people[sizePeople].HomeAddress[0] == '0')
+    writeString(temp.HomeAddress, 30);
+    if (temp.HomeAddress[0] == '0')
     {
         return;
     }
     printf("Enter phone number (0 - Return): ");
-    scanf("%s", &people[sizePeople].PhoneNumber);
-    if (people[sizePeople].PhoneNumber[0] == '0')
+    scanf("%s", &temp.PhoneNumber);
+    if (temp.PhoneNumber[0] == '0')
     {
         return;
     }
     printf("Enter age (0 - Return): ");
-    scanf("%s", &people[sizePeople].Age);
-    if (people[sizePeople].Age[0] == '0')
+    scanf("%s", &temp.Age);
+    if (temp.Age[0] == '0')
     {
         return;
     }
     showMessage("New human was added");
     sizePeople++;
+    people = (struct Human *)realloc(people, sizeof(struct Human) * (sizePeople + 1));
+    people[sizePeople - 1] = temp;
 }
 void copyArray(struct Human *dest, struct Human *source, int size)
 {
@@ -197,7 +199,7 @@ struct Human *sortEngine(int parameter, int parameter1)
     }
     return array;
 }
-void sortBy()
+void sortByMenu()
 {
     int parameter, parameter1;
     while (1)
@@ -241,6 +243,7 @@ void searchEngine(struct Human *source, int sizeSource, char *string, int single
             {
                 array[counter] = source[i];
                 counter++;
+                break;
             }
         }
     }
@@ -307,18 +310,18 @@ void editHuman(int humanNumber, const char *parameter)
 }
 int doChoice(struct Human *array, int size)
 {
-    int humanNumber;
+    int num;
     do
     {
         showArray(array, size);
-        printf("Enter the human's number(0 - Return): ");
-        scanf("%d", &humanNumber);
-        if (humanNumber < 0 || humanNumber > sizePeople)
+        printf("Enter the number(0 - Return): ");
+        scanf("%d", &num);
+        if (num < 0 || num > size)
         {
             showMessage("Wrong number, please try again");
         }
-    } while (humanNumber < 0 || humanNumber > sizePeople);
-    return humanNumber;
+    } while (num < 0 || num > size);
+    return num;
 }
 void editHumanMenu()
 {
@@ -372,21 +375,22 @@ void editHumanMenu()
         }
     }
 }
-void deleteHuman()
+int removeArrayElement(struct Human *array, int sizeArray)
 {
     while (1)
     {
-        int humanNumber = doChoice(people, sizePeople);
-        if (humanNumber == 0)
+        int num = doChoice(array, sizeArray);
+        if (num == 0)
         {
-            return;
+            return sizeArray;
         }
-        for (int i = humanNumber - 1; i < sizePeople - 1; i++)
+        for (int i = num - 1; i < sizeArray; i++)
         {
-            people[i] = people[i + 1];
+            array[i] = array[i + 1];
         }
-        sizePeople--;
-        showMessage("Delete human successfully");
+        sizeArray--;
+        array = (struct Human *)realloc(array, sizeof(struct Human) * (sizeArray + 1));
+        showMessage("Delete was successful");
     }
 }
 void menu()
@@ -408,7 +412,7 @@ void menu()
         }
         else if (parameter == 2)
         {
-            sortBy();
+            sortByMenu();
         }
         else if (parameter == 3)
         {
@@ -420,7 +424,7 @@ void menu()
         }
         else if (parameter == 5)
         {
-            deleteHuman();
+            sizePeople=removeArrayElement(people, sizePeople);
         }
         else if (parameter == 6)
         {
@@ -436,5 +440,6 @@ void menu()
 int main()
 {
     menu();
+    free(people);
     return 0;
 }
