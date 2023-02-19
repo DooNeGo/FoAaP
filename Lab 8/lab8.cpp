@@ -105,7 +105,7 @@ int doRepetitionCheck(char *startofArray, char *startofArray1, int arraySize, in
     }
     if (counter == numberofElementstoCompare)
     {
-        showMessage("This human already exists", "Green");
+        showMessage("This human already exists", "Red");
         return true;
     }
     else
@@ -387,11 +387,17 @@ int addArrayElement(struct Human *array, int sizeArray)
     system("cls");
     for (int counter1 = 0; counter1 < numberofFields; counter1++)
     {
+        if (doRepetitionCheck(array[0].Surname, temp.Surname, sizeArray, sizeof(struct Human), 3, sizeof(struct Human)/6))
+        {
+            counter=0;
+            counter1=0;
+            system("cls");
+        }
         char *unPackedArray = readPackedArray(nameofStructureFields, sizeNameofStructureFields, &counter);
         do
         {
             printf("Enter %s (0 - Return): ", unPackedArray);
-        } while (writeString(temp.Surname + counter1 * sizeof(struct Human) / 6, 30));
+        } while (writeString(temp.Surname + counter1 * sizeof(struct Human) / numberofFields, 30));
         if (*(temp.Surname + counter1 * sizeof(struct Human) / 6) == '0')
         {
             return sizeArray;
