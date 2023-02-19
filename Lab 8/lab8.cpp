@@ -3,6 +3,9 @@
 #include <stdlib.h>
 
 int sizePeople = 0;
+const char nameofStructureFields[] = {"surname\nname\npatronymic\nhome address\nphone number\nage\n"};
+int numberofFields;
+int sizeNameofStructureFields;
 
 struct Human
 {
@@ -13,12 +16,62 @@ struct Human
     char PhoneNumber[30];
     char Age[30];
 } *people = (struct Human *)malloc(sizeof(struct Human) * (sizePeople + 1));
-void showMessage(const char *msg)
+
+void showMessage(const char *msg, const char *color)
 {
     system("cls");
+    if (color == "Green")
+    {
+        system("color A");
+    }
+    else
+    {
+        system("color 4");
+    }
     fflush(stdin);
     printf("%s\n", msg);
     system("pause");
+    system("color 7");
+}
+int doCheckNumberofFields(const char *packedArray, int sizeArray)
+{
+    int counter = 0;
+    for (int i = 0; i < sizeArray; i++)
+    {
+        if (packedArray[i] == '\n')
+        {
+            counter++;
+        }
+    }
+    return counter;
+}
+char *readPackedArray(const char *packedArray, int sizePackedArray, int *counter)
+{
+    char *unPackedArray = (char *)malloc(sizeof(char) * sizePackedArray);
+    int counter1 = 0;
+    for (; *counter < sizePackedArray; (*counter)++)
+    {
+        unPackedArray[counter1] = packedArray[*counter];
+        counter1++;
+        if (packedArray[*counter] == '\n')
+        {
+            (*counter)++;
+            unPackedArray[counter1 - 1] = '\000';
+            return unPackedArray;
+        }
+    }
+    return unPackedArray;
+}
+void showFieldDependentMenu(const char *string)
+{
+    int counter = 0;
+    for (int counter1 = 0; counter1 < numberofFields; counter1++)
+    {
+        char *unPackedArray = readPackedArray(nameofStructureFields, sizeNameofStructureFields, &counter);
+        printf("%d - %s %s\n", counter1 + 1, string, unPackedArray);
+        free(unPackedArray);
+    }
+    printf("0 - Return\n");
 }
 void showArray(struct Human *array, int sizeArray)
 {
@@ -52,7 +105,7 @@ int doRepetitionCheck(char *startofArray, char *startofArray1, int arraySize, in
     }
     if (counter == numberofElementstoCompare)
     {
-        showMessage("This human already exists");
+        showMessage("This human already exists", "Green");
         return true;
     }
     else
@@ -60,67 +113,36 @@ int doRepetitionCheck(char *startofArray, char *startofArray1, int arraySize, in
         return false;
     }
 }
-void writeString(char *array, int size)
+int writeString(char *array, int size)
 {
     char ch;
-    int counter = 0;
+    int i;
+    int flag = 0;
     fflush(stdin);
-    for (int i = 0; i < size - 1; i++)
+    for (i = 0; i < size - 1 && !flag; i++)
     {
-        scanf("%c", &ch);
-        if (ch != '\n')
+        do
         {
-            array[i] = ch;
-            counter++;
-        }
-        else
-        {
-            break;
-        }
+            scanf("%c", &ch);
+            if (ch != '\n')
+            {
+                array[i] = ch;
+                break;
+            }
+            else if (i != 0)
+            {
+                flag = 1;
+            }
+            else
+            {
+                showMessage("Error, enter characters", "Red");
+                system("cls");
+                return 1;
+            }
+        } while (!flag);
     }
-    array[counter] = '\000';
-    fflush(stdin);
-}
-void addHuman()
-{
-    struct Human temp;
-    do
-    {
-        system("cls");
-        fflush(stdin);
-        printf("Enter FIO (0 - Return): ");
-        scanf("%s", &temp.Surname);
-        if (temp.Surname[0] == '0')
-        {
-            return;
-        }
-        else
-        {
-            scanf("%s%s", &temp.Name, &temp.Patronymic);
-        }
-    } while (doRepetitionCheck(people[0].Surname, temp.Surname, sizePeople, sizeof(struct Human), 3, sizeof(struct Human) / 6));
-    printf("Enter home address(0 - Return): ");
-    writeString(temp.HomeAddress, 30);
-    if (temp.HomeAddress[0] == '0')
-    {
-        return;
-    }
-    printf("Enter phone number (0 - Return): ");
-    scanf("%s", &temp.PhoneNumber);
-    if (temp.PhoneNumber[0] == '0')
-    {
-        return;
-    }
-    printf("Enter age (0 - Return): ");
-    scanf("%s", &temp.Age);
-    if (temp.Age[0] == '0')
-    {
-        return;
-    }
-    showMessage("New human was added");
-    sizePeople++;
-    people = (struct Human *)realloc(people, sizeof(struct Human) * (sizePeople + 1));
-    people[sizePeople - 1] = temp;
+    array[i - 1] = '\000';
+    return 0;
 }
 void copyArray(struct Human *dest, struct Human *source, int size)
 {
@@ -151,44 +173,28 @@ int sortAscendingDescending()
         }
         else
         {
-            showMessage("Wrong number, please try again");
+            showMessage("Wrong number, please try again", "Red");
         }
     }
 }
-struct Human *sortEngine(int parameter, int parameter1)
+struct Human *sortEngine(int parameter, int parameter1, struct Human *unSortedArray, int sizeUnSortedArray, int singleElementSize)
 {
     int num;
-    struct Human *array = (struct Human *)malloc(sizeof(struct Human) * sizePeople);
-    copyArray(array, people, sizePeople);
-    for (int i = 0; i < sizePeople - 1; i++)
+    struct Human *array = (struct Human *)malloc(sizeof(struct Human) * sizeUnSortedArray);
+    copyArray(array, unSortedArray, sizeUnSortedArray);
+    for (int i = 0; i < sizeUnSortedArray - 1; i++)
     {
         num = i;
-        for (int k = i + 1; k < sizePeople; k++)
+        for (int k = i + 1; k < sizeUnSortedArray; k++)
         {
             if (parameter1 == 1)
             {
-                if (parameter == 1 && memcmp(array[num].Surname, array[k].Surname, 1) < 0)
-                    num = k;
-                else if (parameter == 2 && memcmp(array[num].Name, array[k].Name, 1) < 0)
-                    num = k;
-                else if (parameter == 3 && memcmp(array[num].Patronymic, array[k].Patronymic, 1) < 0)
-                    num = k;
-                else if (parameter == 4 && memcmp(array[num].HomeAddress, array[k].HomeAddress, 1) < 0)
-                    num = k;
-                else if (parameter == 5 && memcmp(array[num].Age, array[k].Age, 1) < 0)
+                if (memcmp(array[num].Surname + singleElementSize * (parameter - 1), array[k].Surname + singleElementSize * (parameter - 1), 1) < 0)
                     num = k;
             }
             else if (parameter1 == 2)
             {
-                if (parameter == 1 && memcmp(array[num].Surname, array[k].Surname, 1) > 0)
-                    num = k;
-                else if (parameter == 2 && memcmp(array[num].Name, array[k].Name, 1) > 0)
-                    num = k;
-                else if (parameter == 3 && memcmp(array[num].Patronymic, array[k].Patronymic, 1) > 0)
-                    num = k;
-                else if (parameter == 4 && memcmp(array[num].HomeAddress, array[k].HomeAddress, 1) > 0)
-                    num = k;
-                else if (parameter == 5 && memcmp(array[num].Age, array[k].Age, 1) > 0)
+                if (memcmp(array[num].Surname + singleElementSize * (parameter - 1), array[k].Surname + singleElementSize * (parameter - 1), 1) > 0)
                     num = k;
             }
         }
@@ -206,14 +212,14 @@ void sortByMenu()
     {
         system("cls");
         fflush(stdin);
-        printf("1 - Sort by surname\n2 - Sort by name\n3 - Sort by patronymic\n4 - Sort home address\n5 - Sort by Age\n0 - Return\n");
+        showFieldDependentMenu("Sort by");
         scanf("%d", &parameter);
-        if (parameter > 0 && parameter < 8)
+        if (parameter > 0 && parameter < 7)
         {
             parameter1 = sortAscendingDescending();
-            if (parameter1 == 1 || parameter1 == 2)
+            if (parameter1 != 0)
             {
-                struct Human *sortedArray = sortEngine(parameter, parameter1);
+                struct Human *sortedArray = sortEngine(parameter, parameter1, people, sizePeople, sizeof(struct Human) / numberofFields);
                 showArray(sortedArray, sizePeople);
                 system("pause");
                 free(sortedArray);
@@ -225,7 +231,7 @@ void sortByMenu()
         }
         else
         {
-            showMessage("Wrong number, please try again");
+            showMessage("Wrong number, please try again", "Red");
         }
     }
 }
@@ -271,42 +277,43 @@ void searchMenu()
         searchEngine(people, sizePeople, string, sizeof(struct Human) / 6, sizeof(struct Human));
     }
 }
-void editHuman(int humanNumber, const char *parameter)
+const char *showSpecificField(const char *unPackedArray, int sizeUnPackedArray, int fieldNumber)
+{
+    int i;
+    int counter = 0;
+    char *temp = (char *)malloc(sizeof(char) * sizeUnPackedArray);
+    for (int counter1 = 0; counter1 < sizeUnPackedArray; counter1++)
+    {
+        if (counter == fieldNumber - 1)
+        {
+            for (i = 0; i < sizeUnPackedArray && unPackedArray[counter1] != '\n'; i++)
+            {
+                temp[i] = unPackedArray[counter1];
+                counter1++;
+            }
+            temp[i] = '\000';
+            return temp;
+        }
+        else if (unPackedArray[counter1] == '\n')
+        {
+            counter++;
+        }
+    }
+    return temp;
+}
+void editHuman(int humanNumber, int parameter, int singleElementSize, const char *string)
 {
     char *tempStr = (char *)malloc(sizeof(char) * 30);
     system("cls");
     fflush(stdin);
-    printf("Enter new %s(0 - Return): ", parameter);
+    printf("Enter new %s (0 - Return): ", string);
     writeString(tempStr, 30);
     if (tempStr[0] == '0')
     {
         return;
     }
-    if (parameter == "surname")
-    {
-        strcpy(people[humanNumber - 1].Surname, tempStr);
-    }
-    else if (parameter == "name")
-    {
-        strcpy(people[humanNumber - 1].Name, tempStr);
-    }
-    else if (parameter == "patronymic")
-    {
-        strcpy(people[humanNumber - 1].Patronymic, tempStr);
-    }
-    else if (parameter == "home address")
-    {
-        strcpy(people[humanNumber - 1].HomeAddress, tempStr);
-    }
-    else if (parameter == "phone number")
-    {
-        strcpy(people[humanNumber - 1].PhoneNumber, tempStr);
-    }
-    else if (parameter == "age")
-    {
-        strcpy(people[humanNumber - 1].Age, tempStr);
-    }
-    showMessage("The change was successful");
+    strcpy(people[humanNumber - 1].Surname + singleElementSize * (parameter - 1), tempStr);
+    showMessage("The change was successful", "Green");
 }
 int doChoice(struct Human *array, int size)
 {
@@ -318,7 +325,7 @@ int doChoice(struct Human *array, int size)
         scanf("%d", &num);
         if (num < 0 || num > size)
         {
-            showMessage("Wrong number, please try again");
+            showMessage("Wrong number, please try again", "Red");
         }
     } while (num < 0 || num > size);
     return num;
@@ -338,39 +345,19 @@ void editHumanMenu()
         {
             system("cls");
             printf("FIO: %-s %-s %-s  Home address: %-s  Phone number: %-s  Age: %-2s\n", people[humanNumber - 1].Surname, people[humanNumber - 1].Name, people[humanNumber - 1].Patronymic, people[humanNumber - 1].HomeAddress, people[humanNumber - 1].PhoneNumber, people[humanNumber - 1].Age);
-            printf("1 - Edit surname\n2 - Edit name\n3 - Edit patronymic\n4 - Edit home address\n5 - Edit phone number\n6 - Edit age\n0 - Return\n");
+            showFieldDependentMenu("Edit");
             scanf("%d", &parameter);
-            if (parameter == 1)
+            if (parameter > 0 && parameter < numberofFields + 1)
             {
-                editHuman(humanNumber, "surname");
-            }
-            else if (parameter == 2)
-            {
-                editHuman(humanNumber, "name");
-            }
-            else if (parameter == 3)
-            {
-                editHuman(humanNumber, "patronymic");
-            }
-            else if (parameter == 4)
-            {
-                editHuman(humanNumber, "home address");
-            }
-            else if (parameter == 5)
-            {
-                editHuman(humanNumber, "phone number");
-            }
-            else if (parameter == 6)
-            {
-                editHuman(humanNumber, "age");
+                editHuman(humanNumber, parameter, sizeof(struct Human) / numberofFields, showSpecificField(nameofStructureFields, sizeNameofStructureFields, parameter));
             }
             else if (parameter == 0)
             {
                 stop = true;
             }
-            else if (parameter < 0 || parameter > 6)
+            else
             {
-                showMessage("Wrong number, please try again");
+                showMessage("Wrong number, please try again", "Red");
             }
         }
     }
@@ -390,8 +377,32 @@ int removeArrayElement(struct Human *array, int sizeArray)
         }
         sizeArray--;
         array = (struct Human *)realloc(array, sizeof(struct Human) * (sizeArray + 1));
-        showMessage("Delete was successful");
+        showMessage("Delete was successful", "Green");
     }
+}
+int addArrayElement(struct Human *array, int sizeArray)
+{
+    struct Human temp;
+    int counter = 0;
+    system("cls");
+    for (int counter1 = 0; counter1 < numberofFields; counter1++)
+    {
+        char *unPackedArray = readPackedArray(nameofStructureFields, sizeNameofStructureFields, &counter);
+        do
+        {
+            printf("Enter %s (0 - Return): ", unPackedArray);
+        } while (writeString(temp.Surname + counter1 * sizeof(struct Human) / 6, 30));
+        if (*(temp.Surname + counter1 * sizeof(struct Human) / 6) == '0')
+        {
+            return sizeArray;
+        }
+        free(unPackedArray);
+    }
+    array[sizeArray] = temp;
+    sizeArray++;
+    array = (struct Human *)realloc(array, sizeof(struct Human) * (sizeArray + 1));
+    showMessage("Adding was successful", "Green");
+    return sizeArray;
 }
 void menu()
 {
@@ -408,7 +419,7 @@ void menu()
         }
         else if (parameter == 1)
         {
-            addHuman();
+            sizePeople = addArrayElement(people, sizePeople);
         }
         else if (parameter == 2)
         {
@@ -424,7 +435,7 @@ void menu()
         }
         else if (parameter == 5)
         {
-            sizePeople=removeArrayElement(people, sizePeople);
+            sizePeople = removeArrayElement(people, sizePeople);
         }
         else if (parameter == 6)
         {
@@ -433,12 +444,14 @@ void menu()
         }
         else if (parameter < 0 || parameter > 6)
         {
-            showMessage("Wrong number, please try again");
+            showMessage("Wrong number, please try again", "Red");
         }
     }
 }
 int main()
 {
+    sizeNameofStructureFields = strlen(nameofStructureFields);
+    numberofFields = doCheckNumberofFields(nameofStructureFields, sizeNameofStructureFields);
     menu();
     free(people);
     return 0;
