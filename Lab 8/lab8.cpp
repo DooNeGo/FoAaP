@@ -2,10 +2,12 @@
 #include <string.h>
 #include <stdlib.h>
 #include <windows.h>
+
 int sizePeople = 0;
 const char nameofStructureFields[] = {"surname\nname\npatronymic\nhome address\nphone number\nage\n"};
 int numberofFields;
 int sizeNameofStructureFields;
+
 struct Human
 {
     char Surname[30];
@@ -195,7 +197,7 @@ void sortByMenu()
         fflush(stdin);
         showFieldDependentMenu("Sort by");
         scanf("%d", &parameter);
-        if (parameter > 0 && parameter < 7)
+        if (parameter > 0 && parameter < numberofFields + 1)
         {
             parameter1 = sortAscendingDescending();
             if (parameter1 != 0)
@@ -277,8 +279,10 @@ void editHuman(int humanNumber, int parameter, int singleElementSize, const char
     char *tempStr = (char *)malloc(sizeof(char) * 30);
     system("cls");
     fflush(stdin);
-    printf("Enter new %s (0 - Return): ", string);
-    writeString(tempStr, 30);
+    do
+    {
+        printf("Enter new %s (0 - Return): ", string);
+    } while (writeString(tempStr, 30));
     if (tempStr[0] == '0')
         return;
     strcpy(people[humanNumber - 1].Surname + singleElementSize * (parameter - 1), tempStr);
