@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <windows.h>
-
 int sizePeople = 0;
 const char nameofStructureFields[] = {"surname\nname\npatronymic\nhome address\nphone number\nage\n"};
 int numberofFields;
@@ -16,7 +15,7 @@ struct Human
     char HomeAddress[30];
     char PhoneNumber[30];
     char Age[30];
-} *people = (struct Human *)malloc(sizeof(struct Human) * (sizePeople + 1));
+} *people = (struct Human *)malloc(sizeof(struct Human) * (sizePeople + 10));
 
 void showMessage(const char *msg, const char *color)
 {
@@ -335,7 +334,6 @@ int removeArrayElement(struct Human *array, int sizeArray)
         for (int i = num - 1; i < sizeArray; i++)
             array[i] = array[i + 1];
         sizeArray--;
-        array = (struct Human *)realloc(array, sizeof(struct Human) * (sizeArray + 1));
         showMessage("Delete was successful", "Green");
     }
 }
@@ -363,7 +361,8 @@ int addArrayElement(struct Human *array, int sizeArray)
     }
     array[sizeArray] = temp;
     sizeArray++;
-    array = (struct Human *)realloc(array, sizeof(struct Human) * (sizeArray + 1));
+    if (sizeArray % 10 == 0)
+        array = (struct Human *)realloc(array, sizeof(struct Human) * (sizeArray + 10));
     showMessage("Adding was successful", "Green");
     return sizeArray;
 }
