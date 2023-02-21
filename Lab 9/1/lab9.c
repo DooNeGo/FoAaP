@@ -16,7 +16,7 @@ void showMessage(const char *msg, const char *color)
 int load(int *temp, int *returnedSize)
 {
     int i = 0;
-    int counter = 0;
+    int counter = 1;
     FILE *f = fopen("f.txt", "rt");
     if (!f)
     {
@@ -26,17 +26,20 @@ int load(int *temp, int *returnedSize)
     }
     for (i = 0; !feof(f); i++)
     {
-        /*if (i % 10 == 0)
+        if (i % 10 == 0)
         {
             counter++;
-            temp = (int *)realloc(temp, sizeof(int) * counter * 10 + 1);
-        }*/
-        fscanf(f, "%d", &temp[i]);
-        if (temp[i] < 10 && temp[i] > -10 || temp[i] > 99 || temp[i] < -99)
-        {
-            showMessage("ERROR2 file", "Red");
-            fclose(f);
-            return 1;
+            do
+            {
+                temp = (int *)realloc(temp, sizeof(int) * counter * 10);
+            } while (!temp);
+            fscanf(f, "%d", &temp[i]);
+            if (temp[i] < 10 && temp[i] > -10 || temp[i] > 99 || temp[i] < -99)
+            {
+                showMessage("ERROR2 file", "Red");
+                fclose(f);
+                return 1;
+            }
         }
     }
     *returnedSize = i;
@@ -60,7 +63,11 @@ void createNewSpecificFile(int *temp, int size)
 }
 int main()
 {
-    int *temp = (int *)malloc(sizeof(int)*20);
+    int *temp;
+    do
+    {
+        temp = (int *)malloc(sizeof(int) * 10);
+    } while (!temp);
     int sizeArray;
     if (!load(temp, &sizeArray))
     {
