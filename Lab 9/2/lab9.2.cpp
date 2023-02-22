@@ -40,7 +40,7 @@ int doCheckNumberofFields(const char *packedArray, int sizeArray)
 
     for (int i = 0; i < sizeArray; i++)
     {
-        if (packedArray[i] == '\n')
+        if (packedArray[i] == '$')
             counter++;
     }
     return counter;
@@ -56,7 +56,7 @@ char *readPackedArray(const char *packedArray, int sizePackedArray, int *counter
         unPackedArray[counter1] = packedArray[*counter];
         counter1++;
 
-        if (packedArray[*counter] == '\n')
+        if (packedArray[*counter] == '$')
         {
             (*counter)++;
 
@@ -112,37 +112,6 @@ void doCopyArray(struct Human *dest, struct Human *source, int size)
     }
 }
 
-void doCopyArray1(char *dest, char *source, int size)
-{
-    for (int i = 0; i < size; i++)
-    {
-        dest[i] = source[i];
-    }
-    dest[size] = '\000';
-}
-
-char *doConvertArray(char *array, int sizeArray, int mode)
-{
-    char *temp = (char *)malloc(sizeof(char) * sizeArray + 1);
-
-    doCopyArray1(temp, array, sizeArray);
-
-    for (int i = 0; i < sizeArray; i++)
-    {
-        if (mode == 1 && temp[i] == '\n')
-        {
-            temp[i] = '$';
-        }
-
-        else if (mode == 2 && temp[i] == '$')
-        {
-            temp[i] = '\n';
-        }
-    }
-
-    return temp;
-}
-
 int load()
 {
     FILE *file = fopen("data.dat", "rb");
@@ -151,13 +120,13 @@ int load()
     if (file)
     {
         fread(&sizePeople, sizeof(int), 1, file);
+
         if (sizePeople < 0)
         {
             showMessage("ERROR 2", "Red");
 
             return 2;
         }
-
         else if (sizePeople > 0)
         {
             fread(people, sizeof(struct Human), sizePeople, file);
@@ -168,17 +137,22 @@ int load()
 
     if (file1)
     {
-        fscanf(file1, "%d", &sizeNameofStructureFields);
-        if (sizeNameofStructureFields < 1)
+        int counter = 1;
+        int i;
+        nameofStructureFields = (char *)malloc(sizeof(char) * 10);
+
+        for (i = 0; !feof(file1); i++)
         {
-            showMessage("ERROR 1", "Red");
-            return 1;
+            if (i != 0 && i % 10 == 0)
+            {
+                counter++;
+                nameofStructureFields = (char *)realloc(nameofStructureFields, sizeof(char) * 10 * counter + 1);
+            }
+            fscanf(file1, "%c", &nameofStructureFields[i]);
         }
+        nameofStructureFields[i]='\000';
 
-        char temp[sizeNameofStructureFields];
-
-        fgets(temp, sizeNameofStructureFields, file1);
-        nameofStructureFields = doConvertArray(temp, sizeNameofStructureFields, 2);
+        sizeNameofStructureFields = i++;
 
         fclose(file1);
     }
@@ -197,14 +171,10 @@ void save()
     if (sizePeople > 0)
         fwrite(people, sizeof(struct Human), sizePeople, file);
 
-    fprintf(file1, "%d", sizeNameofStructureFields);
-    char *temp = doConvertArray(nameofStructureFields, sizeNameofStructureFields, 1);
-    fprintf(file1, "%s", temp);
+    fprintf(file1, "%s", nameofStructureFields);
 
     fflush(file);
     fflush(file1);
-
-    free(temp);
 
     fclose(file1);
     fclose(file);
@@ -604,7 +574,7 @@ int main()
 
     if (status == 3)
     {
-        char temp[] = {"surname\nname\npatronymic\nhome address\nphone number\nage\n\000"};
+        char temp[] = {"surname$name$patronymic$home address$phone number$age$\000"};
 
         nameofStructureFields = (char *)malloc(sizeof(char) * 55);
 
