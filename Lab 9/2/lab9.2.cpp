@@ -150,7 +150,7 @@ int load()
             }
             fscanf(file1, "%c", &nameofStructureFields[i]);
         }
-        nameofStructureFields[i]='\000';
+        nameofStructureFields[i] = '\000';
 
         sizeNameofStructureFields = i++;
 
@@ -187,17 +187,20 @@ int doRepetitionCheck(char *startofArray, char *startofArray1, int arraySize, in
     for (int i = 0; i < arraySize * structureSize; i += structureSize)
     {
         counter = 0;
+
         for (int j = 0; j < numberofElementstoCompare * singleElementSize; j += singleElementSize)
         {
             if (strcmp(startofArray1 + j, startofArray + i + j) == 0)
                 counter++;
         }
     }
+
     if (counter == numberofElementstoCompare)
     {
         showMessage("This human already exists", "Red");
         return true;
     }
+
     else
         return false;
 }
@@ -373,26 +376,26 @@ void searchMenu()
     }
 }
 
-const char *showSpecificField(const char *unPackedArray, int sizeUnPackedArray, int fieldNumber)
+const char *showSpecificField(const char *packedArray, int sizePackedArray, int fieldNumber)
 {
     int i;
     int counter = 0;
-    char *temp = (char *)malloc(sizeof(char) * sizeUnPackedArray);
+    char *temp = (char *)malloc(sizeof(char) * sizePackedArray);
 
-    for (int counter1 = 0; counter1 < sizeUnPackedArray; counter1++)
+    for (int counter1 = 0; counter1 < sizePackedArray; counter1++)
     {
         if (counter == fieldNumber - 1)
         {
-            for (i = 0; i < sizeUnPackedArray && unPackedArray[counter1] != '\n'; i++)
+            for (i = 0; i < sizePackedArray && packedArray[counter1] != '$'; i++)
             {
-                temp[i] = unPackedArray[counter1];
+                temp[i] = packedArray[counter1];
                 counter1++;
             }
 
             temp[i] = '\000';
             return temp;
         }
-        else if (unPackedArray[counter1] == '\n')
+        else if (packedArray[counter1] == '$')
             counter++;
     }
     return temp;
@@ -438,8 +441,6 @@ int doChoice(struct Human *array, int size)
 
 void editHumanMenu()
 {
-    int parameter;
-
     while (1)
     {
         int humanNumber = doChoice(people, sizePeople);
@@ -450,10 +451,13 @@ void editHumanMenu()
 
         while (!stop)
         {
-            system("cls");
-            printf("FIO: %-s %-s %-s  Home address: %-s  Phone number: %-s  Age: %-2s\n", people[humanNumber - 1].Surname, people[humanNumber - 1].Name, people[humanNumber - 1].Patronymic, people[humanNumber - 1].HomeAddress, people[humanNumber - 1].PhoneNumber, people[humanNumber - 1].Age);
+            int parameter = -1;
 
+            system("cls");
+
+            printf("FIO: %-s %-s %-s  Home address: %-s  Phone number: %-s  Age: %-2s\n", people[humanNumber - 1].Surname, people[humanNumber - 1].Name, people[humanNumber - 1].Patronymic, people[humanNumber - 1].HomeAddress, people[humanNumber - 1].PhoneNumber, people[humanNumber - 1].Age);
             showFieldDependentMenu("Edit");
+
             scanf("%d", &parameter);
 
             if (parameter > 0 && parameter < numberofFields + 1)
@@ -529,10 +533,10 @@ int addArrayElement(struct Human *array, int sizeArray)
 
 void menu()
 {
-    int parameter;
-
     while (1)
     {
+        int parameter = -1;
+
         system("cls");
         fflush(stdin);
 
