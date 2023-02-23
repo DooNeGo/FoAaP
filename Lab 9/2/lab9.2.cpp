@@ -240,21 +240,21 @@ void swap(struct Human *elemi, struct Human *elemj)
 
 int showAdditionalSortMenu()
 {
+    int parameter = -1;
     while (1)
     {
-        int parameter = -1;
         fflush(stdin);
         system("cls");
         printf("1 - Ascending\n2 - Descending\n0 - Return\n");
         scanf("%d", &parameter);
-        if (parameter == 1 || parameter == 2 || parameter == 0)
+        if (parameter >= 0 && parameter <= 2)
             return parameter;
         else
             showMessage("Wrong number, please try again", "Red");
     }
 }
 
-struct Human *doSort(int parameter, int parameter1, struct Human *unSortedArray, int sizeUnSortedArray, int singleElemSize)
+void doSort(int parameter, int parameter1, struct Human *unSortedArray, int sizeUnSortedArray, int singleElemSize)
 {
     int num;
     struct Human *array = (struct Human *)malloc(sizeof(struct Human) * sizeUnSortedArray);
@@ -280,28 +280,26 @@ struct Human *doSort(int parameter, int parameter1, struct Human *unSortedArray,
             swap(&array[i], &array[num]);
         }
     }
-    return array;
+    showArray(array, sizeUnSortedArray);
+    free(array);
+    system("pause");
 }
 
 void showSortMenu()
 {
-    int parameter;
-    int parameter1;
+    int parameter = -1;
     while (1)
     {
         system("cls");
         fflush(stdin);
         showFieldDependentMenu("Sort by");
         scanf("%d", &parameter);
-        if (parameter > 0 && parameter < numberofFields + 1)
+        if (parameter > 0 && parameter <= numberofFields)
         {
-            parameter1 = showAdditionalSortMenu();
+            int parameter1 = showAdditionalSortMenu();
             if (parameter1 != 0)
             {
-                struct Human *sortedArray = doSort(parameter, parameter1, people, sizePeople, sizeof(struct Human) / numberofFields);
-                showArray(sortedArray, sizePeople);
-                free(sortedArray);
-                system("pause");
+                doSort(parameter, parameter1, people, sizePeople, sizeof(struct Human) / numberofFields);
             }
         }
         else if (parameter == 0)
@@ -332,11 +330,11 @@ void doSearch(struct Human *source, int sizeSource, char *string, int singleElem
             }
         }
     }
+    printf("Number of matches: %d\n", counter);
     if (counter > 0)
     {
         showArray(array, counter);
     }
-    printf("Number of matches: %d\n", counter);
     free(array);
     system("pause");
 }
@@ -433,14 +431,14 @@ void showEditMenu()
         {
             return;
         }
+        int parameter = -1;
         while (!stop)
         {
-            int parameter = -1;
             system("cls");
             printf("FIO: %-s %-s %-s  Home address: %-s  Phone number: %-s  Age: %-2s\n", people[humanNumber - 1].Surname, people[humanNumber - 1].Name, people[humanNumber - 1].Patronymic, people[humanNumber - 1].HomeAddress, people[humanNumber - 1].PhoneNumber, people[humanNumber - 1].Age);
             showFieldDependentMenu("Edit");
             scanf("%d", &parameter);
-            if (parameter > 0 && parameter < numberofFields + 1)
+            if (parameter > 0 && parameter <= numberofFields)
             {
                 editHuman(humanNumber, parameter, sizeof(struct Human) / numberofFields, showSpecificField(nameofStructureFields, sizeNameofStructureFields, parameter));
             }
@@ -489,7 +487,6 @@ int addArrayElement(struct Human *array, int sizeArray)
         {
             counter = 0;
             counter1 = 0;
-
             system("cls");
         }
         char *unPackedArray = readPackedArray(nameofStructureFields, sizeNameofStructureFields, &counter);
@@ -518,7 +515,7 @@ int addArrayElement(struct Human *array, int sizeArray)
     return sizeArray;
 }
 
-void showMainMenu()
+int showMainMenu()
 {
     while (1)
     {
@@ -527,36 +524,11 @@ void showMainMenu()
         fflush(stdin);
         printf("1 - Add human\n2 - Sort by\n3 - Search\n4 - Edit human\n5 - Delete human\n6 - Show people\n0 - Exit\n");
         scanf("%d", &parameter);
-        if (parameter == 0)
+        if (parameter >= 0 && parameter <= 6)
         {
-            return;
+            return parameter;
         }
-        else if (parameter == 1)
-        {
-            sizePeople = addArrayElement(people, sizePeople);
-        }
-        else if (parameter == 2)
-        {
-            showSortMenu();
-        }
-        else if (parameter == 3)
-        {
-            showSearchMenu();
-        }
-        else if (parameter == 4)
-        {
-            showEditMenu();
-        }
-        else if (parameter == 5)
-        {
-            sizePeople = deleteArrayElement(people, sizePeople);
-        }
-        else if (parameter == 6)
-        {
-            showArray(people, sizePeople);
-            system("pause");
-        }
-        else if (parameter < 0 || parameter > 6)
+        else
         {
             showMessage("Wrong number, please try again", "Red");
         }
@@ -571,7 +543,6 @@ int main()
     {
         char temp[] = {"surname$name$patronymic$home address$phone number$age$\000"};
         nameofStructureFields = (char *)malloc(sizeof(char) * 55);
-
         strcpy(nameofStructureFields, temp);
         sizeNameofStructureFields = 55;
     }
@@ -579,8 +550,42 @@ int main()
     if (status == 0 || status == 3)
     {
         numberofFields = getNumberOfFields(nameofStructureFields, sizeNameofStructureFields);
-        showMainMenu();
-        save();
+        while (1)
+        {
+            int tempNumber = showMainMenu();
+            if (tempNumber == 0)
+            {
+                save();
+                free(people);
+                free(nameofStructureFields);
+                return 0;
+            }
+            else if (tempNumber == 1)
+            {
+                sizePeople = addArrayElement(people, sizePeople);
+            }
+            else if (tempNumber == 2)
+            {
+                showSortMenu();
+            }
+            else if (tempNumber == 3)
+            {
+                showSearchMenu();
+            }
+            else if (tempNumber == 4)
+            {
+                showEditMenu();
+            }
+            else if (tempNumber == 5)
+            {
+                sizePeople = deleteArrayElement(people, sizePeople);
+            }
+            else if (tempNumber == 6)
+            {
+                showArray(people, sizePeople);
+                system("pause");
+            }
+        }
     }
 
     free(people);
