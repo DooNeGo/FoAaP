@@ -59,7 +59,7 @@ char *getStructureFields(const char *packedArray, int sizePackedArray, int *coun
         if (packedArray[*counter] == '$')
         {
             (*counter)++;
-            unPackedArray[counter1 - 1] = '\000';
+            unPackedArray[counter1 - 1] = 0;
             return unPackedArray;
         }
     }
@@ -216,7 +216,7 @@ int read(char *array, int size)
             }
         } while (!flag);
     }
-    array[i - 1] = '\0';
+    array[i - 1] = 0;
     return 0;
 }
 
@@ -226,6 +226,7 @@ void swap(void *elemi, void *elemj, int size)
     memcpy(temp, elemi, size);
     memcpy(elemi, elemj, size);
     memcpy(elemj, temp, size);
+    free(temp);
 }
 
 int showSortMenuByOrder()
@@ -364,7 +365,7 @@ const char *getFieldValue(const char *packedArray, int sizePackedArray, int fiel
                 temp[i] = packedArray[counter1];
                 counter1++;
             }
-            temp[i] = '\000';
+            temp[i] = 0;
             return temp;
         }
         else if (packedArray[counter1] == '$')
