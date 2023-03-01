@@ -50,39 +50,19 @@ void divideRow(float *matrix, float divider, int columns, int row)
     }
 }
 
-float *getMultipliedRow(float *matrix, int row, int columns, int rows, int *counter)
-{
-    float *tempArray = (float *)malloc(sizeof(float) * columns);
-    for (; *counter < pow(2, rows - 2) + 1;)
-    {
-        for (int j = 0; j < columns; j++)
-        {
-            tempArray[j] = *(matrix + row * columns + j) * *(matrix + *counter * columns + row);
-        }
-        (*counter)++;
-        return tempArray;
-    }
-    return tempArray;
-}
-
 float *doGauss(float *matrix, int rows, int columns)
 {
     float *newMatrix = copyArray(matrix, rows, columns);
     for (int i = 0; i < rows; i++)
     {
-        int counter = i + 1;
-        float temp = *(newMatrix + i * columns + i);
-        divideRow(newMatrix, temp, columns, i);
-        // showMatrix(newMatrix, 3, 4);
+        float divider = *(newMatrix + i * columns + i);
+        divideRow(newMatrix, divider, columns, i);
         for (int k = i + 1; k < rows; k++)
         {
-            float *tempArray = getMultipliedRow(newMatrix, i, columns, rows, &counter);
-            // printf("\n");
-            // showMatrix(tempArray, 1, 4);
-            // printf("%d\n", i);
+            float temp = *(newMatrix + k * columns + i);
             for (int l = 0; l < columns; l++)
             {
-                *(newMatrix + k * columns + l) -= tempArray[l];
+                *(newMatrix + k * columns + l) -= *(newMatrix + i * columns + l) * temp;
             }
         }
     }
@@ -123,11 +103,6 @@ int main()
     printf("New matrix:\n");
     showMatrix(newMatrix, rows, columns);
 
-    //float x3 = *(newMatrix + 2 * columns + 3);
-    //float x2 = *(newMatrix + 1 * columns + 3) - *(newMatrix + 1 * columns + 2) * x3;
-    //float x1 = *(newMatrix + 0 * columns + 3) - *(newMatrix + 0 * columns + 1) * x2 - *(newMatrix + 0 * columns + 2) * x3;
-    //printf("x1: %f, x2: %f, x3: %f\n", x1, x2, x3);
-
     float *roots = getRoots(newMatrix, rows, columns);
     for (int i = 0; i < rows; i++)
     {
@@ -135,6 +110,7 @@ int main()
     }
     printf("\n");
 
+    free(roots);
     free(matrix);
     free(newMatrix);
     system("pause");
