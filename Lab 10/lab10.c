@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <string.h>
 
 float *getMatrix(int rows, int columns)
 {
@@ -72,25 +71,31 @@ float *doGauss(float *matrix, int rows, int columns)
 float *getRoots(float *matrix, int rows, int columns)
 {
     float *roots = (float *)malloc(sizeof(float) * rows);
-    int k = columns - 1;
     for (int i = rows - 1; i >= 0; i--)
     {
         float temp = 0;
-        for (int j = k; j < columns - 1; j++)
+        for (int j = rows - (rows - 1 - i); j < rows; j++)
         {
             temp += *(matrix + i * columns + j) * roots[j];
         }
-        k--;
-        roots[i] = *(matrix + i * columns + columns - 1) - temp;
+        roots[i] = *(matrix + i * columns + rows) - temp;
     }
     return roots;
+}
+
+void showRoots(float *roots, int rows)
+{
+    for (int i = 0; i < rows; i++)
+    {
+        printf("x%d: %f  ", i + 1, roots[i]);
+    }
+    printf("\n");
 }
 
 int main()
 {
     int rows;
     int columns;
-
     printf("Enter rows and columns: ");
     scanf("%d%d", &rows, &columns);
 
@@ -104,15 +109,11 @@ int main()
     showMatrix(newMatrix, rows, columns);
 
     float *roots = getRoots(newMatrix, rows, columns);
-    for (int i = 0; i < rows; i++)
-    {
-        printf("x%d: %f  ", i + 1, roots[i]);
-    }
-    printf("\n");
+    showRoots(roots, rows);
 
     free(roots);
     free(matrix);
     free(newMatrix);
-    system("pause");
+
     return 0;
 }
