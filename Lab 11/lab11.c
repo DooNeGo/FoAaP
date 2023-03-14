@@ -11,6 +11,7 @@ enum
     SUCCESSFUL_COMPLETION = 0,
     DOES_NOT_CONVERGE = 1,
     CONVERGES = 0,
+    CONVERGES_BUT_THE_SEQUENCE_OF_ROWS_IS_NOT_CORRECT = 2,
     DOES_NOT_CONTAIN_ONE = 1,
     CONTAIN_ONE = 0
 };
@@ -38,14 +39,6 @@ void nullArray(float *array, int size)
     }
 }
 
-void nullArrayInt(int *array, int size)
-{
-    for (int i = 0; i < size; i++)
-    {
-        array[i] = 0;
-    }
-}
-
 void showMatrix(float *matrix, int rows, int columns)
 {
     for (int i = 0; i < rows; i++)
@@ -53,18 +46,6 @@ void showMatrix(float *matrix, int rows, int columns)
         for (int j = 0; j < columns; j++)
         {
             printf("%7.2f", *(matrix + i * columns + j));
-        }
-        GO_TO_NEXT_LINE;
-    }
-}
-
-void showMatrixInt(int *matrix, int rows, int columns)
-{
-    for (int i = 0; i < rows; i++)
-    {
-        for (int j = 0; j < columns; j++)
-        {
-            printf("%5.d", matrix[i * columns + j]);
         }
         GO_TO_NEXT_LINE;
     }
@@ -79,16 +60,6 @@ float *getStartRoots(float *matrix, int rows, int columns)
         roots[i] = 0;
     }
     return roots;
-}
-
-float *getVector(float *matrix, int rows, int columns)
-{
-    float *vector = (float *)malloc(sizeof(float) * rows);
-    for (int i = 0; i < rows; i++)
-    {
-        vector[i] = matrix[i * columns + columns - 1] / matrix[i * columns + i];
-    }
-    return vector;
 }
 
 float getMaxElement(float *array, int size, int *outMaxElementNumber)
@@ -106,28 +77,13 @@ float getMaxElement(float *array, int size, int *outMaxElementNumber)
     return max;
 }
 
-int checkArrayForOne(int *array, int size)
+int checkConvergence(float *matrix, int rows, int columns, int *outSequenceArray)
 {
-    for (int i = 0; i < size; i++)
-    {
-        if (array[i] == 1)
-        {
-            return CONTAIN_ONE;
-        }
-    }
-    return DOES_NOT_CONTAIN_ONE;
-}
-
-int checkConvergence(float *matrix, int rows, int columns)
-{
-    int temp[rows * (columns - 1)];
-    nullArrayInt(temp, rows * (columns - 1));
     for (int i = 0; i < rows; i++)
     {
         float temp1 = 0;
-        int maxElementNumber;
-        float rowMaxElement = fabs(getMaxElement(matrix + i * columns, columns - 1, &maxElementNumber));
-        for (int j = 0; j < columns - 1; j++)
+        float rowMaxElement = fabs(getMaxElement(matrix + i * columns, rows, outSequenceArray + i));
+        for (int j = 0; j < rows; j++)
         {
             temp1 += fabs(matrix[i * columns + j]);
         }
@@ -136,6 +92,14 @@ int checkConvergence(float *matrix, int rows, int columns)
             return DOES_NOT_CONVERGE;
         }
     }
+    for (int i = 0; i < rows - 1; i++)
+    {
+        if (outSequenceArray[i] > outSequenceArray[i + 1])
+        {
+            return CONVERGES_BUT_THE_SEQUENCE_OF_ROWS_IS_NOT_CORRECT;
+        }
+    }
+
     return CONVERGES;
 }
 
@@ -187,6 +151,26 @@ float *findRoots(float *dividedMatrix, float *startRoots, int rows, int columns,
     return newRoots;
 }
 
+void swap(void *elemi, void *elemj, int size)
+{
+    void *temp = malloc(size);
+    memcpy(temp, elemi, size);
+    memcpy(elemi, elemj, size);
+    memcpy(elemj, temp, size);
+    free(temp);
+}
+
+void sortMatrixRowsByGreatestDiagonalElement(float *matrix, int *sequenceArray, int rows, int columns)
+{
+    for (int i = 0; i < rows; i++)
+    {
+        if (sequenceArray[i] == i)
+            continue;
+        swap(matrix + i * columns, matrix + sequenceArray[i] * columns, sizeof(float) * columns);
+        swap(&sequenceArray[i], &sequenceArray[sequenceArray[i]], sizeof(int));
+    }
+}
+
 int main(int argc, char **argv)
 {
     int rows;
@@ -198,15 +182,21 @@ int main(int argc, char **argv)
 
     printf("Enter SLAE:\n");
     float *matrix = getMatrix(rows, columns);
-
-    int isConverges = checkConvergence(matrix, rows, columns);
+    int *sequenceArray = (int *)malloc(sizeof(int) * rows);
+    int isConverges = checkConvergence(matrix, rows, columns, sequenceArray);
     if (isConverges == DOES_NOT_CONVERGE)
     {
         printf("\nMatrix doesn't converge!!!\n");
+        free(matrix);
+        free(sequenceArray);
         SYSTEM_PAUSE;
         return DOES_NOT_CONVERGE;
     }
-
+    else if (isConverges == CONVERGES_BUT_THE_SEQUENCE_OF_ROWS_IS_NOT_CORRECT)
+    {
+        sortMatrixRowsByGreatestDiagonalElement(matrix, sequenceArray, rows, columns);
+        free(sequenceArray);
+    }
     printf("Enter measurement error: ");
     scanf("%f", &measurementError);
 
@@ -235,3 +225,4 @@ int main(int argc, char **argv)
 // {0.66 -1.44 -0.18 1.83 0.48 -0.24 0.37 -0.84 0.86 0.43 0.64 0.64} rows = 3, columns 4
 
 // {10 -1 2 0 6 -1 11 -1 3 25 2 -1 10 -1 -11 0 3 -1 8 15} rows = 4, columns = 5
+// {0 3 -1 8 15 10 -1 2 0 6 2 -1 10 -1 -11 -1 11 -1 3 25}
