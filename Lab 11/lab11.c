@@ -12,19 +12,17 @@ enum
     DOES_NOT_CONVERGE = 1,
     CONVERGES = 0,
     CONVERGES_BUT_THE_SEQUENCE_OF_ROWS_IS_NOT_CORRECT = 2,
-    DOES_NOT_CONTAIN_ONE = 1,
-    CONTAIN_ONE = 0
 };
 
 float *getMatrix(int rows, int columns)
 {
-    // srand(time(0));
+    //srand(time(0));
     float *matrix = (float *)malloc(sizeof(float) * rows * columns);
     for (int i = 0; i < rows; i++)
     {
         for (int j = 0; j < columns; j++)
         {
-            // *(matrix + i * columns + j) = -3.0 + 8.0 * rand() / (float)RAND_MAX;
+            //*(matrix + i * columns + j) = -3.0 + 8.0 * rand() / (float)RAND_MAX;
             scanf("%f", matrix + i * columns + j);
         }
     }
@@ -92,6 +90,16 @@ int checkConvergence(float *matrix, int rows, int columns, int *outSequenceArray
             return DOES_NOT_CONVERGE;
         }
     }
+    //showArrrayInt(outSequenceArray, rows);
+    for (int i = 0; i < rows - 1; i++)
+    {
+        for (int j = i + 1; j < rows; j++)
+        {
+            if (outSequenceArray[i] == outSequenceArray[j])
+                return DOES_NOT_CONVERGE;
+        }
+    }
+
     for (int i = 0; i < rows - 1; i++)
     {
         if (outSequenceArray[i] > outSequenceArray[i + 1])
@@ -181,9 +189,13 @@ int main(int argc, char **argv)
     scanf("%d%d", &rows, &columns);
 
     printf("Enter SLAE:\n");
-    float *matrix = getMatrix(rows, columns);
-    int *sequenceArray = (int *)malloc(sizeof(int) * rows);
-    int isConverges = checkConvergence(matrix, rows, columns, sequenceArray);
+    int isConverges;
+    float *matrix;
+    int *sequenceArray;
+
+    matrix = getMatrix(rows, columns);
+    sequenceArray = (int *)malloc(sizeof(int) * rows);
+    isConverges = checkConvergence(matrix, rows, columns, sequenceArray);
     if (isConverges == DOES_NOT_CONVERGE)
     {
         printf("\nMatrix doesn't converge!!!\n");
@@ -192,7 +204,8 @@ int main(int argc, char **argv)
         SYSTEM_PAUSE;
         return DOES_NOT_CONVERGE;
     }
-    else if (isConverges == CONVERGES_BUT_THE_SEQUENCE_OF_ROWS_IS_NOT_CORRECT)
+    showMatrix(matrix, rows, columns);
+    if (isConverges == CONVERGES_BUT_THE_SEQUENCE_OF_ROWS_IS_NOT_CORRECT)
     {
         sortMatrixRowsByGreatestDiagonalElement(matrix, sequenceArray, rows, columns);
         free(sequenceArray);
@@ -226,3 +239,4 @@ int main(int argc, char **argv)
 
 // {10 -1 2 0 6 -1 11 -1 3 25 2 -1 10 -1 -11 0 3 -1 8 15} rows = 4, columns = 5
 // {0 3 -1 8 15 10 -1 2 0 6 2 -1 10 -1 -11 -1 11 -1 3 25}
+// {1.14 -0.38 3.89 3.66 -1.14 0.94}
