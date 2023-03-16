@@ -39,12 +39,12 @@ void swap(void *elemi, void *elemj, int size)
     free(temp);
 }
 
-void *mergeArrays(void *Array, void *Array1, int sizeArray, int sizeArray1, int singleElementSize, int *returnedSizeArray)
+void *merge(void *Source, void *Source1, int countSource, int countSource1, int singleElementSize, int *outNewCount)
 {
-    void *newArray = malloc((sizeArray + sizeArray1) * singleElementSize);
-    memcpy(newArray, Array, singleElementSize * sizeArray);
-    memcpy(newArray + singleElementSize * sizeArray, Array1, singleElementSize * sizeArray1);
-    *returnedSizeArray = sizeArray + sizeArray1;
+    void *newArray = malloc((countSource + countSource1) * singleElementSize);
+    memcpy(newArray, Source, singleElementSize * countSource);
+    memcpy(newArray + singleElementSize * countSource, Source1, singleElementSize * countSource1);
+    *outNewCount = countSource + countSource1;
     return newArray;
 }
 
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
     float *Array1 = getArray(sizeArray1);
     sortInDescendingOrder(Array, sizeArray);
     sortInDescendingOrder(Array1, sizeArray1);
-    float *mergedArray = (float *)mergeArrays(Array, Array1, sizeArray, sizeArray1, sizeof(float), &newSizeArray);
+    float *mergedArray = (float *)merge(Array, Array1, sizeArray, sizeArray1, sizeof(float), &newSizeArray);
     float *sortedMergedArray = sortInAscendingOrder(mergedArray, newSizeArray);
 
     printf("\nFirst array:\n");
