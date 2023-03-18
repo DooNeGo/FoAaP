@@ -8,7 +8,7 @@
 
 enum
 {
-    SUCCESSFUL_COMPLETION = 0,
+    SUCCESS_CODE = 0,
 };
 
 float *getArray(int size)
@@ -39,12 +39,46 @@ void swap(void *elemi, void *elemj, int size)
     free(temp);
 }
 
-void *merge(void *Source, void *Source1, int countSource, int countSource1, int singleElementSize, int *outNewCount)
+void *merge(void *Source, void *Source1, int SourceCount, int Source1Count, int singleElementSize, int *outNewCount)
 {
-    void *newArray = malloc((countSource + countSource1) * singleElementSize);
-    memcpy(newArray, Source, singleElementSize * countSource);
-    memcpy(newArray + singleElementSize * countSource, Source1, singleElementSize * countSource1);
-    *outNewCount = countSource + countSource1;
+    int newArrayCount = SourceCount + Source1Count;
+    void *newArray = malloc(newArrayCount * singleElementSize);
+    memcpy(newArray, Source, singleElementSize * SourceCount);
+    memcpy(newArray + singleElementSize * SourceCount, Source1, singleElementSize * Source1Count);
+    *outNewCount = newArrayCount;
+    return newArray;
+}
+
+float *mergeAnotherVersion(float *Array, float *Array1, int sizeArray, int sizeArray1, int *outNewCount)
+{
+    int k = 0;
+    int j = 0;
+    int newSizeArray = sizeArray + sizeArray1;
+    float *newArray = (float *)malloc(sizeof(float) * newSizeArray);
+    for (int i = 0; i < newSizeArray; i++)
+    {
+        if (Array[sizeArray - 1 - k] <= Array1[sizeArray1 - 1 - j] && k < sizeArray && j < sizeArray1)
+        {
+            newArray[i] = Array[sizeArray - 1 - k];
+            k++;
+        }
+        else if (Array[sizeArray - 1 - k] >= Array1[sizeArray1 - 1 - j] && k < sizeArray && j < sizeArray1)
+        {
+            newArray[i] = Array1[sizeArray1 - 1 - j];
+            j++;
+        }
+        else if (k < sizeArray && j >= sizeArray1)
+        {
+            newArray[i] = Array[sizeArray - 1 - k];
+            k++;
+        }
+        else
+        {
+            newArray[i] = Array1[sizeArray1 - 1 - j];
+            j++;
+        }
+    }
+    *outNewCount = newSizeArray;
     return newArray;
 }
 
@@ -106,8 +140,9 @@ int main(int argc, char **argv)
     float *Array1 = getArray(sizeArray1);
     sortInDescendingOrder(Array, sizeArray);
     sortInDescendingOrder(Array1, sizeArray1);
-    float *mergedArray = (float *)merge(Array, Array1, sizeArray, sizeArray1, sizeof(float), &newSizeArray);
-    float *sortedMergedArray = sortInAscendingOrder(mergedArray, newSizeArray);
+    // float *mergedArray = (float *)merge(Array, Array1, sizeArray, sizeArray1, sizeof(float), &newSizeArray);
+    // float *sortedMergedArray = sortInAscendingOrder(mergedArray, newSizeArray);
+    float *mergedArray = mergeAnotherVersion(Array, Array1, sizeArray, sizeArray1, &newSizeArray);
 
     printf("\nFirst array:\n");
     showArray(Array, sizeArray);
@@ -115,15 +150,15 @@ int main(int argc, char **argv)
     showArray(Array1, sizeArray1);
     printf("\nMerged array:\n");
     showArray(mergedArray, newSizeArray);
-    printf("\nSorted merged array:\n");
-    showArray(sortedMergedArray, newSizeArray);
+    // printf("\nSorted merged array:\n");
+    // showArray(sortedMergedArray, newSizeArray);
 
     free(Array);
     free(Array1);
     free(mergedArray);
-    free(sortedMergedArray);
+    // free(sortedMergedArray);
 
     GO_TO_NEXT_LINE;
     SYSTEM_PAUSE;
-    return SUCCESSFUL_COMPLETION;
+    return SUCCESS_CODE;
 }
