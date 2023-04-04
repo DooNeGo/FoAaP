@@ -3,6 +3,7 @@
 
 String *readString()
 {
+    fflush(stdin);
     String *arr = ConstructString(2);
     while (1)
     {
@@ -10,7 +11,7 @@ String *readString()
         scanf("%c", &temp);
         if (temp == '\n')
             break;
-        AddStringElem(arr, temp);
+        AddElemToString(arr, temp);
     }
     return arr;
 }

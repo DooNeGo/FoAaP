@@ -1,3 +1,4 @@
+#include <stdlib.h>
 typedef struct String
 {
     char *elems;
@@ -6,7 +7,7 @@ typedef struct String
 } String;
 
 String *ConstructString(int);
-int AddStringElem(String *, const char elem);
+int AddElemToString(String *, const char elem);
 int AddString(String *, const char *);
 int ClearString(String *);
 char *ConvertStringToCharArray(String *);
@@ -22,5 +23,16 @@ typedef struct Array
 } Array;
 
 Array *ConstructArray(int, int);
-int InsertArrayElem(Array *, const void *);
+int InsertElemToArray(Array *, const void *);
 void* GetArrayElem(Array *, int);
+
+
+void swap(void *elemi, void *elemj, size_t size);
+void *concatenation(const void *Source, const void *Source1, const int SourceCount, const int Source1Count, const size_t singleElementSize, int *outNewCount);
+
+
+enum CodeStatus
+{
+    SUCCESSFUL_CODE = 0,
+    UNSUCCESSFUL_CODE = 1,
+};

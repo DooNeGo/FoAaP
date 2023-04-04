@@ -3,12 +3,6 @@
 #include <stdio.h>
 #include "DooNeGo.h"
 
-enum CodeStatus
-{
-    SUCCESSFUL_CODE = 0,
-    UNSUCCESSFUL_CODE = 1,
-};
-
 Array *ConstructArray(int initialSize, int elemSize)
 {
     Array *arr = (Array *)malloc(sizeof(Array));
@@ -19,7 +13,7 @@ Array *ConstructArray(int initialSize, int elemSize)
     return arr;
 }
 
-int InsertArrayElem(Array *arr, const void *elem)
+int InsertElemToArray(Array *arr, const void *elem)
 {
     void *newArrElem = malloc(arr->elemSize);
     memcpy(newArrElem, elem, arr->elemSize);

@@ -3,12 +3,6 @@
 #include <stdio.h>
 #include "DooNeGo.h"
 
-enum CodeStatus
-{
-    SUCCESSFUL_CODE = 0,
-    UNSUCCESSFUL_CODE = 1,
-};
-
 String *ConstructString(int initialSize)
 {
     String *arr = (String *)malloc(sizeof(String));
@@ -18,7 +12,7 @@ String *ConstructString(int initialSize)
     return arr;
 }
 
-int AddStringElem(String *arr, const char elem)
+int AddElemToString(String *arr, const char elem)
 {
     char *newArrElem = (char *)malloc(sizeof(char));
     memcpy(newArrElem, &elem, sizeof(char));
@@ -48,7 +42,7 @@ int AddString(String *arr, const char *string)
     int size = strlen(string);
     for (int i = 0; i < size; i++)
     {
-        AddStringElem(arr, string[i]);
+        AddElemToString(arr, string[i]);
     }
     return SUCCESSFUL_CODE;
 }
