@@ -38,9 +38,33 @@ int InsertElemToArray(Array *arr, const void *elem)
     return SUCCESSFUL_CODE;
 }
 
-void* GetArrayElem(Array *arr, int index)
+void *GetArrayElem(Array *arr, int index)
 {
     if (index >= arr->count || index < 0)
         return NULL;
     return arr->elems[index];
+}
+
+int RemoveArrayElemAt(Array *arr, int index)
+{
+    if (index >= arr->count)
+        return ArgumentOutOfRangeException;
+    for (int i = index; i < arr->count - 1; i++)
+    {
+        arr->elems[i] = arr->elems[i + 1];
+    }
+    arr->count--;
+    return SUCCESSFUL_CODE;
+}
+
+int RemoveArrayElem(Array *arr, const void *elem)
+{
+    for (int index = 0; index < arr->count; index++)
+    {
+        if (memcmp(arr->elems[index], elem, arr->elemSize) == 0)
+        {
+            return RemoveArrayElemAt(arr, index);
+        }
+    }
+    return UNSUCCESSFUL_CODE;
 }

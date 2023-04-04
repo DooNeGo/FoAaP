@@ -14,8 +14,7 @@ String *ConstructString(int initialSize)
 
 int InsertElemToString(String *arr, const char elem)
 {
-    char *newArrElem = (char *)malloc(sizeof(char));
-    memcpy(newArrElem, &elem, sizeof(char));
+    char newArrElem = elem;
     if (arr->count == arr->capacity)
     {
         int newSize = arr->capacity * 2;
@@ -25,23 +24,21 @@ int InsertElemToString(String *arr, const char elem)
             newArr[i] = arr->elems[i];
         }
         free(arr->elems);
-        newArr[arr->count] = *newArrElem;
+        newArr[arr->count] = newArrElem;
         arr->capacity = newSize;
         arr->elems = newArr;
     }
     else
     {
-        arr->elems[arr->count] = *newArrElem;
+        arr->elems[arr->count] = newArrElem;
     }
-    (arr->count)++;
-    free(newArrElem);
+    arr->count++;
     return SUCCESSFUL_CODE;
 }
 
 int AddString(String *arr, const char *string)
 {
-    int size = strlen(string);
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < strlen(string); i++)
     {
         InsertElemToString(arr, string[i]);
     }
@@ -51,7 +48,8 @@ int AddString(String *arr, const char *string)
 int ClearString(String *arr)
 {
     free(arr->elems);
-    arr->capacity = 1;
+    arr->elems = (char *)malloc(sizeof(char) * 2);
+    arr->capacity = 2;
     arr->count = 0;
     return SUCCESSFUL_CODE;
 }
@@ -60,7 +58,7 @@ char *ConvertStringToCharArray(String *arr)
 {
     if (arr->count < 1)
         return NULL;
-    char *newArr = (char *)malloc(arr->count);
-    memcpy(newArr, arr->elems, arr->count);
-    return newArr;
+    char *arrChar = (char *)malloc(arr->count);
+    memcpy(arrChar, arr->elems, arr->count);
+    return arrChar;
 }

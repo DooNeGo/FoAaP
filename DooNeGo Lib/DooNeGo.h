@@ -24,15 +24,16 @@ typedef struct Array
 
 Array *ConstructArray(int initialSize, int elemSize);
 int InsertElemToArray(Array *arr, const void *elem);
-void* GetArrayElem(Array *arr, int index);
-
+void *GetArrayElem(Array *arr, int index);
+int RemoveArrayElemAt(Array *arr, int index);
+int RemoveArrayElem(Array *arr, const void *elem);
 
 void swap(void *elemi, void *elemj, size_t size);
 void *concatenation(const void *Source, const void *Source1, const int SourceCount, const int Source1Count, const size_t singleElementSize, int *outNewCount);
-
 
 enum CodeStatus
 {
     SUCCESSFUL_CODE = 0,
     UNSUCCESSFUL_CODE = 1,
+    ArgumentOutOfRangeException = 2,
 };
