@@ -12,7 +12,7 @@ String *ConstructString(int initialSize)
     return arr;
 }
 
-int AddElemToString(String *arr, const char elem)
+int InsertElemToString(String *arr, const char elem)
 {
     char *newArrElem = (char *)malloc(sizeof(char));
     memcpy(newArrElem, &elem, sizeof(char));
@@ -24,6 +24,7 @@ int AddElemToString(String *arr, const char elem)
         {
             newArr[i] = arr->elems[i];
         }
+        free(arr->elems);
         newArr[arr->count] = *newArrElem;
         arr->capacity = newSize;
         arr->elems = newArr;
@@ -42,7 +43,7 @@ int AddString(String *arr, const char *string)
     int size = strlen(string);
     for (int i = 0; i < size; i++)
     {
-        AddElemToString(arr, string[i]);
+        InsertElemToString(arr, string[i]);
     }
     return SUCCESSFUL_CODE;
 }
@@ -51,6 +52,7 @@ int ClearString(String *arr)
 {
     free(arr->elems);
     arr->capacity = 1;
+    arr->count = 0;
     return SUCCESSFUL_CODE;
 }
 

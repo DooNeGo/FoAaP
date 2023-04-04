@@ -25,6 +25,7 @@ int InsertElemToArray(Array *arr, const void *elem)
         {
             newArr[i] = arr->elems[i];
         }
+        free(arr->elems);
         newArr[arr->count] = newArrElem;
         arr->capacity = newSize;
         arr->elems = newArr;
@@ -33,7 +34,7 @@ int InsertElemToArray(Array *arr, const void *elem)
     {
         arr->elems[arr->count] = newArrElem;
     }
-    (arr->count)++;
+    arr->count++;
     return SUCCESSFUL_CODE;
 }
 

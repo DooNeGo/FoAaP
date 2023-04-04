@@ -7,6 +7,7 @@ int writeString(String *arr)
     {
         printf("%c", arr->elems[i]);
     }
-    printf("\n");
+    if (arr->count > 0)
+        printf("\n");
     return SUCCESSFUL_CODE;
 }

@@ -11,7 +11,7 @@ String *readString()
         scanf("%c", &temp);
         if (temp == '\n')
             break;
-        AddElemToString(arr, temp);
+        InsertElemToString(arr, temp);
     }
     return arr;
 }

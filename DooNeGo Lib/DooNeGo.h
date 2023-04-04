@@ -6,11 +6,11 @@ typedef struct String
     int capacity;
 } String;
 
-String *ConstructString(int);
-int AddElemToString(String *, const char elem);
-int AddString(String *, const char *);
-int ClearString(String *);
-char *ConvertStringToCharArray(String *);
+String *ConstructString(int initialSize);
+int InsertElemToString(String *arr, const char elem);
+int AddString(String *arr, const char *string);
+int ClearString(String *arr);
+char *ConvertStringToCharArray(String *arr);
 int writeString(String *arr);
 String *readString();
 
@@ -22,9 +22,9 @@ typedef struct Array
     int elemSize;
 } Array;
 
-Array *ConstructArray(int, int);
-int InsertElemToArray(Array *, const void *);
-void* GetArrayElem(Array *, int);
+Array *ConstructArray(int initialSize, int elemSize);
+int InsertElemToArray(Array *arr, const void *elem);
+void* GetArrayElem(Array *arr, int index);
 
 
 void swap(void *elemi, void *elemj, size_t size);
