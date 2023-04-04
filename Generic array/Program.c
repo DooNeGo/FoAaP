@@ -1,14 +1,14 @@
 #include "Array.h"
 #include <stdio.h>
-#include <math.h>
 
 void ShowArray(Array *arr)
 {
     for (int i = 0; i < arr->count; i++)
     {
-        int outEl;
-        ArrayGet(arr, i, &outEl);
-        printf("%d\n", outEl);
+        int *arrElem = (int*)ArrayGet(arr, i);
+        if (arrElem == NULL)
+            continue;
+        printf("%d\n", *arrElem);
     }
 }
 

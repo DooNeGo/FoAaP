@@ -50,10 +50,9 @@ int ArrayAdd(Array *arr, const void *elem)
     return SUCCESSFUL_CODE;
 }
 
-int ArrayGet(Array *arr, int index, void *outputElem)
+void* ArrayGet(Array *arr, int index)
 {
     if (index >= arr->count || index < 0)
-        return UNSUCCESSFUL_CODE;
-    memcpy(outputElem, arr->elems[index], arr->elemSize);
-    return SUCCESSFUL_CODE;
+        return NULL;
+    return arr->elems[index];
 }
