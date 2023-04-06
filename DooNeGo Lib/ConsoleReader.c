@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "DooNeGo.h"
 
-String *readString()
+String *ReadString()
 {
     fflush(stdin);
     String *arr = ConstructString(2);

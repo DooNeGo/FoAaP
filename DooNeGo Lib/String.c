@@ -3,6 +3,13 @@
 #include <stdio.h>
 #include "DooNeGo.h"
 
+typedef struct String
+{
+    char *elems;
+    int count;
+    int capacity;
+} String;
+
 String *ConstructString(int initialSize)
 {
     String *arr = (String *)malloc(sizeof(String));
@@ -12,40 +19,58 @@ String *ConstructString(int initialSize)
     return arr;
 }
 
-int InsertElemToString(String *arr, const char elem)
+void ResizeString(String *arr)
+{
+    int newSize = arr->capacity * 2;
+    char *newArr = (char *)malloc(newSize);
+    memcpy(newArr, arr->elems, arr->count);
+    free(arr->elems);
+    arr->capacity = newSize;
+    arr->elems = newArr;
+}
+
+CodeStatus InsertElemToString(String *arr, const char elem)
 {
     char newArrElem = elem;
     if (arr->count == arr->capacity)
-    {
-        int newSize = arr->capacity * 2;
-        char *newArr = (char *)malloc(newSize);
-        for (int i = 0; i < arr->count; i++)
-        {
-            newArr[i] = arr->elems[i];
-        }
-        free(arr->elems);
-        newArr[arr->count] = newArrElem;
-        arr->capacity = newSize;
-        arr->elems = newArr;
-    }
-    else
-    {
-        arr->elems[arr->count] = newArrElem;
-    }
+        ResizeString(arr);
+    arr->elems[arr->count] = newArrElem;
     arr->count++;
     return SUCCESSFUL_CODE;
 }
 
-int AddString(String *arr, const char *string)
+CodeStatus SetCharArrToString(String *arr, const char *string)
 {
-    for (int i = 0; i < strlen(string); i++)
+    if (arr->count > 0)
+        ClearString(arr);
+    int size = strlen(string);
+    for (int i = 0; i < size; i++)
     {
         InsertElemToString(arr, string[i]);
     }
     return SUCCESSFUL_CODE;
 }
 
-int ClearString(String *arr)
+CodeStatus SetStringWithFree(String *dest, String *source)
+{
+    if (dest->count > 0)
+        ClearString(dest);
+    memcpy(dest, source, sizeof(String));
+    free(source);
+    return SUCCESSFUL_CODE;
+}
+
+CodeStatus InsertCharArrToString(String *arr, const char *string)
+{
+    int size = strlen(string);
+    for (int i = 0; i < size; i++)
+    {
+        InsertElemToString(arr, string[i]);
+    }
+    return SUCCESSFUL_CODE;
+}
+
+CodeStatus ClearString(String *arr)
 {
     free(arr->elems);
     arr->elems = (char *)malloc(sizeof(char) * 2);
@@ -61,4 +86,30 @@ char *ConvertStringToCharArray(String *arr)
     char *arrChar = (char *)malloc(arr->count);
     memcpy(arrChar, arr->elems, arr->count);
     return arrChar;
+}
+
+int GetSizeOfString()
+{
+    return sizeof(String);
+}
+
+int GetCountString(String *str)
+{
+    return str->count;
+}
+
+char GetElemString(String *str, int index)
+{
+    if (index >= str->count || index < 0)
+        return NULL;
+    return str->elems[index];
+}
+
+Bool IsEqualStrings(const String *str, const String *str1)
+{
+    if (str->count != str1->count)
+        return False;
+    if (memcmp(str->elems, str1->elems, str->count) == 0)
+        return True;
+    return False;
 }
