@@ -1,8 +1,8 @@
-#include "DooNeGo.h"
 #include <string.h>
 #include <stdlib.h>
+#include "Actions.h"
 
-void swap(void *elemi, void *elemj, size_t size)
+void swap(void *elemi, void *elemj, unsigned int size)
 {
     void *temp = malloc(size);
     memcpy(temp, elemi, size);
@@ -11,7 +11,7 @@ void swap(void *elemi, void *elemj, size_t size)
     free(temp);
 }
 
-void *concatenation(const void *Source, const void *Source1, const int SourceCount, const int Source1Count, const size_t singleElementSize, int *outNewCount)
+void *concatenation(const void *Source, const void *Source1, const int SourceCount, const int Source1Count, const unsigned int singleElementSize, int *outNewCount)
 {
     int newArrayCount = SourceCount + Source1Count;
     void *newArray = malloc(newArrayCount * singleElementSize);

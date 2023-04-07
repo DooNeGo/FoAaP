@@ -4,17 +4,17 @@
 
 int main(int argc, char **argv)
 {
-    printf("Input:\n");
-    String *arr = readString();
-    String *arr1 = readString();
+    Array *arr = ConstructArray(1, GetSizeOfString());
 
-    Array *arrString = ConstructArray(1, sizeof(String));
-    InsertElemToArray(arrString, arr);
-    InsertElemToArray(arrString, arr1);
+    InsertElemToArray(arr, ReadStringPtr());
+    InsertElemToArray(arr, ReadStringPtr());
+    InsertElemToArray(arr, ReadStringPtr());
 
-    printf("Output:\n");
-    writeString((String *)GetArrayElem(arrString, 0));
-    writeString((String *)GetArrayElem(arrString, 1));
+    for (int i = 0; i< GetArrCount(arr); i++)
+        WriteString((String *)GetArrElem(arr, i));
+
+    printf("\nCount: %d\n", GetArrCount(arr));
+    printf("Capacity: %d\n", GetArrCapacity(arr));
 
     system("pause");
     return SUCCESSFUL_CODE;
