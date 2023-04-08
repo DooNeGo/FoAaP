@@ -40,12 +40,13 @@ typedef enum CodeStatus
 typedef struct Node Node;
 Node *ConstructNode();
 CodeStatus FindAndDeleteNode(Node *node, const String *value);
-CodeStatus SetValueToNode(Node *node, String *value);
-String *GetNodeValue(Node *node);
+CodeStatus SetValueToNode(Node *node, const String *value);
+const String *GetNodeValue(const Node *node);
 int GetChildrenCount(const Node *node);
-Node *GetNodeChildren(Node *node);
+const Node *GetNodeChildren(const Node *node);
 Status GetNodeStatus(const Node *node);
 Bool CheckNodeValue(const Node *node, const String *value);
 int GetSizeOfNode();
+void FreeNode(Node *node);
 
 #endif

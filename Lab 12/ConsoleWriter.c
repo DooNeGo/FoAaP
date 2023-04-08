@@ -1,20 +1,34 @@
 #include <stdio.h>
 #include "ConsoleWriter.h"
+#include "DynamicArray.h"
 
-CodeStatus WriteString(String *str)
+CodeStatus WriteString(const String *str)
 {
     if (str == NULL)
         return UNSUCCESSFUL_CODE;
-    for (int i = 0; i < GetCountString(str); i++)
+    for (int i = 0; i < GetStringCount(str); i++)
     {
         printf("%c", GetStringElem(str, i));
     }
-    if (GetCountString(str) > 0)
+    if (GetStringCount(str) > 0)
         printf("\n");
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus WriteHashTableNode(Node *node)
+CodeStatus WriteHashTableNode(const Node *node)
 {
-    WriteString(GetNodeValue(node));
+    int countChildren = GetChildrenCount(node);
+    for (int i = 0; i <= countChildren; i++)
+    {
+        if (GetNodeStatus(node) == Exist)
+            WriteString(GetNodeValue(node));
+        node = GetNodeChildren(node);
+    }
+    return SUCCESSFUL_CODE;
+}
+
+CodeStatus WriteEachNodeCollision(HashTable *hashTable)
+{
+    for (int i = 0; i < GetHashTableCount(hashTable); i++);
+    return SUCCESSFUL_CODE;
 }

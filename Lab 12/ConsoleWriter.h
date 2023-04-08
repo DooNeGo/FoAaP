@@ -1,10 +1,10 @@
 #include "String.h"
-#include "Node.h"
+#include "HashTable.h"
 
 #ifndef WRITE_STRING
 #define WRITE_STRING
 
-CodeStatus WriteString(String *str);
-CodeStatus WriteHashTableNode(Node *node);
+CodeStatus WriteString(const String *str);
+CodeStatus WriteHashTableNode(const Node *node);
 
 #endif

@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include "Node.h"
-#include "DynamicArray.h"
 
 typedef struct Node
 {
@@ -29,13 +28,16 @@ Bool CheckNodeValue(const Node *node, const String *value)
     return CheckNodeValue(node->children, value);
 }
 
-CodeStatus SetValueToNode(Node *node, String *value)
+CodeStatus SetValueToNode(Node *node, const String *value)
 {
     if (node == NULL || value == NULL || IsEqualStrings(node->value, value))
         return UNSUCCESSFUL_CODE;
-    if (node->status == Deleted)
+    if (GetNodeStatus(node) == Deleted)
     {
-        node->value = ConstructString(2);
+        if (node->value == NULL)
+            node->value = ConstructString(2);
+        else
+            ClearString(node->value);
         SetPtrString(node->value, value);
         node->status = Exist;
         return SUCCESSFUL_CODE;
@@ -63,7 +65,7 @@ CodeStatus FindAndDeleteNode(Node *node, const String *value)
     return FindAndDeleteNode(node->children, value);
 }
 
-String *GetNodeValue(Node *node)
+const String *GetNodeValue(const Node *node)
 {
     return node->value;
 }
@@ -78,7 +80,7 @@ int GetChildrenCount(const Node *node)
     return node->countChildren;
 }
 
-Node *GetNodeChildren(Node *node)
+const Node *GetNodeChildren(const Node *node)
 {
     return node->children;
 }
@@ -86,4 +88,14 @@ Node *GetNodeChildren(Node *node)
 Status GetNodeStatus(const Node *node)
 {
     return node->status;
+}
+
+void FreeNode(Node *node)
+{
+    if (node == NULL)
+        return;
+    FreeString(node->value);
+    FreeNode(node->children);
+    free(node);
+    return;
 }

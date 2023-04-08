@@ -14,7 +14,7 @@ typedef enum CodeStatus
 #define DYNAMIC_ARRAY
 
 typedef struct Array Array;
-Array *ConstructArray(int initialSize, int elemSize);
+Array *ConstructArray(unsigned int initialSize, int elemSize);
 CodeStatus InsertElemToArray(Array *arr, void *elem);
 void *GetArrElem(Array *arr, unsigned int index);
 int GetArrCount(const Array *arr);
