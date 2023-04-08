@@ -29,12 +29,13 @@ String *ConstructString(int initialSize);
 CodeStatus InsertCharArrToString(String *arr, const char *string);
 CodeStatus InsertElemToString(String *arr, const char elem);
 CodeStatus ClearString(String *arr);
-char *ConvertStringToCharArray(String *arr);
+char *ConvertStringToCharArray(const String *arr);
 CodeStatus SetCharArrToString(String *arr, const char *string);
 int GetSizeOfString();
-char GetElemString(String *str, int index);
-int GetCountString(String *str);
-CodeStatus SetStringWithFree(String *dest, String *source);
+char GetStringElem(String *str, unsigned int index);
+int GetCountString(const String *str);
+CodeStatus SetPtrString(String *dest, String *source);
+CodeStatus SetString(String *dest, const String source);
 Bool IsEqualStrings(const String *str, const String *str1);
 
 #endif

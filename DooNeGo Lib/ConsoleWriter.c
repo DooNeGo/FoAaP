@@ -7,7 +7,7 @@ CodeStatus WriteString(String *str)
         return UNSUCCESSFUL_CODE;
     for (int i = 0; i < GetCountString(str); i++)
     {
-        printf("%c", GetElemString(str, i));
+        printf("%c", GetStringElem(str, i));
     }
     if (GetCountString(str) > 0)
         printf("\n");

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "DooNeGo.h"
+#include "Node.h"
 
 int main(int argc, char **argv)
 {
@@ -10,7 +11,7 @@ int main(int argc, char **argv)
     InsertElemToArray(arr, ReadStringPtr());
     InsertElemToArray(arr, ReadStringPtr());
 
-    for (int i = 0; i< GetArrCount(arr); i++)
+    for (int i = 0; i < GetArrCount(arr); i++)
         WriteString((String *)GetArrElem(arr, i));
 
     printf("\nCount: %d\n", GetArrCount(arr));

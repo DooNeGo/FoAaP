@@ -50,12 +50,20 @@ CodeStatus SetCharArrToString(String *arr, const char *string)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus SetStringWithFree(String *dest, String *source)
+CodeStatus SetPtrString(String *dest, String *source)
 {
     if (dest->count > 0)
         ClearString(dest);
     memcpy(dest, source, sizeof(String));
     free(source);
+    return SUCCESSFUL_CODE;
+}
+
+CodeStatus SetString(String *dest, const String source)
+{
+    if (dest->count > 0)
+        ClearString(dest);
+    memcpy(dest, &source, sizeof(String));
     return SUCCESSFUL_CODE;
 }
 
@@ -78,7 +86,7 @@ CodeStatus ClearString(String *arr)
     return SUCCESSFUL_CODE;
 }
 
-char *ConvertStringToCharArray(String *arr)
+char *ConvertStringToCharArray(const String *arr)
 {
     if (arr->count < 1)
         return NULL;
@@ -92,14 +100,14 @@ int GetSizeOfString()
     return sizeof(String);
 }
 
-int GetCountString(String *str)
+int GetCountString(const String *str)
 {
     return str->count;
 }
 
-char GetElemString(String *str, int index)
+char GetStringElem(String *str, unsigned int index)
 {
-    if (index >= str->count || index < 0)
+    if (index >= str->count)
         return NULL;
     return str->elems[index];
 }

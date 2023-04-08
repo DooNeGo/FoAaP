@@ -31,10 +31,11 @@ void ResizeArr(Array *arr)
     arr->elems = newArr;
 }
 
-CodeStatus InsertElemToArray(Array *arr, const void *elem)
+CodeStatus InsertElemToArray(Array *arr, void *elem)
 {
     void *newArrElem = malloc(arr->elemSize);
     memcpy(newArrElem, elem, arr->elemSize);
+    free(elem);
     if (arr->count == arr->capacity)
         ResizeArr(arr);
     arr->elems[arr->count] = newArrElem;
@@ -42,34 +43,34 @@ CodeStatus InsertElemToArray(Array *arr, const void *elem)
     return SUCCESSFUL_CODE;
 }
 
-void *GetArrElem(Array *arr, int index)
+void *GetArrElem(Array *arr, unsigned int index)
 {
-    if (index >= arr->count || index < 0)
+    if (index >= arr->count)
         return NULL;
     return arr->elems[index];
 }
 
-CodeStatus SetArrElem(Array *arr, const void *newElem, int index)
+CodeStatus SetArrElem(Array *arr, const void *newElem, unsigned int index)
 {
-    if (index >= arr->count || index < 0)
+    if (index >= arr->count)
         return UNSUCCESSFUL_CODE;
     memcpy(arr->elems[index], newElem, arr->elemSize);
     return SUCCESSFUL_CODE;
 }
 
-int GetArrCount(Array *arr)
+int GetArrCount(const Array *arr)
 {
     return arr->count;
 }
 
-int GetArrCapacity(Array *arr)
+int GetArrCapacity(const Array *arr)
 {
     return arr->capacity;
 }
 
-CodeStatus RemoveArrayElemAt(Array *arr, int index)
+CodeStatus RemoveArrayElemAt(Array *arr, unsigned int index)
 {
-    if (index >= arr->count || index < 0)
+    if (index >= arr->count)
         return ArgumentOutOfRangeException;
     for (int i = index; i < arr->count - 1; i++)
     {

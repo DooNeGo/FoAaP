@@ -15,12 +15,12 @@ typedef enum CodeStatus
 
 typedef struct Array Array;
 Array *ConstructArray(int initialSize, int elemSize);
-CodeStatus InsertElemToArray(Array *arr, const void *elem);
-void *GetArrElem(Array *arr, int index);
-int GetArrCount(Array *arr);
-int GetArrCapacity(Array *arr);
-CodeStatus SetArrElem(Array *arr, const void *newElem, int index);
-CodeStatus RemoveArrayElemAt(Array *arr, int index);
+CodeStatus InsertElemToArray(Array *arr, void *elem);
+void *GetArrElem(Array *arr, unsigned int index);
+int GetArrCount(const Array *arr);
+int GetArrCapacity(const Array *arr);
+CodeStatus SetArrElem(Array *arr, const void *newElem, unsigned int index);
+CodeStatus RemoveArrayElemAt(Array *arr, unsigned int index);
 CodeStatus RemoveArrayElem(Array *arr, const void *elem);
 CodeStatus ClearArray(Array *arr);
 
