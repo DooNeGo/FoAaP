@@ -11,8 +11,10 @@ typedef struct Array
     int elemSize;
 } Array;
 
-Array *ConstructArray(int initialSize, int elemSize)
+Array *ConstructArray(unsigned int initialSize, int elemSize)
 {
+    if (initialSize == 0)
+        initialSize = 1;
     Array *arr = (Array *)malloc(sizeof(Array));
     arr->count = 0;
     arr->capacity = initialSize;
@@ -94,9 +96,20 @@ CodeStatus RemoveArrayElem(Array *arr, const void *elem)
 
 CodeStatus ClearArray(Array *arr)
 {
+    for (int i = 0; i < arr->count; i++)
+        free(arr->elems[i]);
     free(arr->elems);
     arr->elems = (void **)malloc(arr->elemSize * 2);
     arr->capacity = 2;
     arr->count = 0;
+    return SUCCESSFUL_CODE;
+}
+
+CodeStatus FreeArray(Array *arr)
+{
+    for (int i = 0; i < arr->count; i++)
+        free(arr->elems[i]);
+    free(arr->elems);
+    free(arr);
     return SUCCESSFUL_CODE;
 }
