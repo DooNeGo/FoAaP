@@ -28,7 +28,7 @@ typedef struct String String;
 String *ConstructString(unsigned int initialSize);
 CodeStatus InsertCharArrToString(String *arr, const char *string);
 CodeStatus InsertElemToString(String *arr, const char elem);
-CodeStatus ClearString(String *arr);
+CodeStatus ClearString(String *str, int initialSize);
 char *ConvertStringToCharArray(const String *arr);
 CodeStatus SetCharArrToString(String *arr, const char *string);
 int GetSizeOfString();

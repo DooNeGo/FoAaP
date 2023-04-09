@@ -47,6 +47,6 @@ const Node *GetNodeChildren(const Node *node);
 Status GetNodeStatus(const Node *node);
 Bool CheckNodeValue(const Node *node, const String *value);
 int GetSizeOfNode();
-void FreeNode(Node *node);
+CodeStatus FreeNode(Node *node);
 
 #endif

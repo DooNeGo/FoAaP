@@ -23,7 +23,7 @@ Bool CheckNodeValue(const Node *node, const String *value)
 {
     if (node == NULL)
         return False;
-    if (IsEqualStrings(node->value, value))
+    if (IsEqualStrings(node->value, value) && node->status == Exist)
         return True;
     return CheckNodeValue(node->children, value);
 }
@@ -37,7 +37,7 @@ CodeStatus SetValueToNode(Node *node, const String *value)
         if (node->value == NULL)
             node->value = ConstructString(2);
         else
-            ClearString(node->value);
+            ClearString(node->value, 2);
         SetPtrString(node->value, value);
         node->status = Exist;
         return SUCCESSFUL_CODE;
@@ -46,6 +46,16 @@ CodeStatus SetValueToNode(Node *node, const String *value)
         node->children = ConstructNode();
     node->countChildren++;
     return SetValueToNode(node->children, value);
+}
+
+CodeStatus FreeNode(Node *node)
+{
+    if (node == NULL)
+        return UNSUCCESSFUL_CODE;
+    FreeString(node->value);
+    FreeNode(node->children);
+    free(node);
+    return SUCCESSFUL_CODE;
 }
 
 CodeStatus DeleteNode(Node *node)
@@ -77,6 +87,8 @@ int GetSizeOfNode()
 
 int GetChildrenCount(const Node *node)
 {
+    if (node == NULL)
+        return NULL;
     return node->countChildren;
 }
 
@@ -88,14 +100,4 @@ const Node *GetNodeChildren(const Node *node)
 Status GetNodeStatus(const Node *node)
 {
     return node->status;
-}
-
-void FreeNode(Node *node)
-{
-    if (node == NULL)
-        return;
-    FreeString(node->value);
-    FreeNode(node->children);
-    free(node);
-    return;
 }

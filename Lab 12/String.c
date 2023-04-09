@@ -12,7 +12,7 @@ typedef struct String
 String *ConstructString(unsigned int initialSize)
 {
     if (initialSize == 0)
-        initialSize = 1;
+        initialSize = 2;
     String *arr = (String *)malloc(sizeof(String));
     arr->count = 0;
     arr->capacity = initialSize;
@@ -40,14 +40,14 @@ CodeStatus InsertElemToString(String *arr, const char elem)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus SetCharArrToString(String *arr, const char *string)
+CodeStatus SetCharArrToString(String *str, const char *string)
 {
-    if (arr->count > 0)
-        ClearString(arr);
+    if (GetStringCount(str) > 0)
+        ClearString(str, 2);
     int size = strlen(string);
     for (int i = 0; i < size; i++)
     {
-        InsertElemToString(arr, string[i]);
+        InsertElemToString(str, string[i]);
     }
     return SUCCESSFUL_CODE;
 }
@@ -62,7 +62,7 @@ char GetStringElem(const String *str, unsigned int index)
 CodeStatus SetPtrString(String *dest, const String *source)
 {
     if (dest->count > 0)
-        ClearString(dest);
+        ClearString(dest, 2);
     for (int i = 0; i < GetStringCount(source); i++)
         InsertElemToString(dest, GetStringElem(source, i));
     return SUCCESSFUL_CODE;
@@ -71,7 +71,7 @@ CodeStatus SetPtrString(String *dest, const String *source)
 CodeStatus SetString(String *dest, const String source)
 {
     if (dest->count > 0)
-        ClearString(dest);
+        ClearString(dest, 2);
     for (int i = 0; i < GetStringCount(&source); i++)
         InsertElemToString(dest, GetStringElem(&source, i));
     return SUCCESSFUL_CODE;
@@ -87,12 +87,12 @@ CodeStatus InsertCharArrToString(String *arr, const char *string)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus ClearString(String *arr)
+CodeStatus ClearString(String *str, int initialSize)
 {
-    free(arr->elems);
-    arr->elems = (char *)malloc(sizeof(char) * 2);
-    arr->capacity = 2;
-    arr->count = 0;
+    free(str->elems);
+    str->elems = (char *)malloc(sizeof(char) * initialSize);
+    str->capacity = initialSize;
+    str->count = 0;
     return SUCCESSFUL_CODE;
 }
 

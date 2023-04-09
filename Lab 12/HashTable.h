@@ -10,7 +10,9 @@ const Node *GetHashTableNode(const HashTable *hashTable, unsigned int index);
 Bool FindHashTableNodeValue(const HashTable *hashTable, const String *value);
 CodeStatus DeleteHashTableNode(HashTable *hashTable, const String *value);
 CodeStatus InsertValueToHashTable(HashTable *hashTable, const String *value);
-int GetMaxCountCollisions(const HashTable *hashTable);
 CodeStatus FreeHashTable(HashTable *hashTable);
+
+int GetMaxCountCollisions(const HashTable *hashTable);
+int GetTableFilledCount(HashTable *hashTable);
 
 #endif

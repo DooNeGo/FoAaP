@@ -6,5 +6,6 @@
 
 CodeStatus WriteString(const String *str);
 CodeStatus WriteHashTableNode(const Node *node);
+CodeStatus WriteEachNodeCollision(HashTable *hashTable);
 
 #endif

@@ -17,6 +17,8 @@ CodeStatus WriteString(const String *str)
 
 CodeStatus WriteHashTableNode(const Node *node)
 {
+    if (node == NULL)
+        return UNSUCCESSFUL_CODE;
     int countChildren = GetChildrenCount(node);
     for (int i = 0; i <= countChildren; i++)
     {
@@ -29,6 +31,16 @@ CodeStatus WriteHashTableNode(const Node *node)
 
 CodeStatus WriteEachNodeCollision(HashTable *hashTable)
 {
-    for (int i = 0; i < GetHashTableCount(hashTable); i++);
+    int temp = 0;
+    for (int i = 0; i < GetHashTableCount(hashTable); i++)
+    {
+        if (GetHashTableNode(hashTable, i) != NULL)
+            printf("  %2d. %d\n", i + 1, GetChildrenCount(GetHashTableNode(hashTable, i)) + 1);
+        else
+            printf("  %2d. %d\n", i + 1, NULL);
+        temp += GetChildrenCount(GetHashTableNode(hashTable, i));
+    }
+    printf("\nAverage collisions: %.2f", (double)temp / (double)GetTableFilledCount(hashTable));
+    printf("\nFill: %.2f\n", (double)GetTableFilledCount(hashTable) / (double)GetHashTableCount(hashTable));
     return SUCCESSFUL_CODE;
 }

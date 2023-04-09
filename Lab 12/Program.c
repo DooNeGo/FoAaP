@@ -5,20 +5,23 @@
 
 int main(int argc, char **argv)
 {
-    HashTable *hashTable = ConstructHashTable(20);
-    String *str = ReadStringPtr();
+    HashTable *hashTable = ConstructHashTable(30);
 
     printf("Input:\n");
-
-    InsertValueToHashTable(hashTable, str);
-    DeleteHashTableNode(hashTable, str);
+    for (int i = 0; i < 30; i++)
+    {
+        String *str = ReadStringPtr();
+        InsertValueToHashTable(hashTable, str);
+        FreeString(str);
+    }
 
     printf("\nOutput:\n");
     for (int i = 0; i < GetHashTableCount(hashTable); i++)
         WriteHashTableNode(GetHashTableNode(hashTable, i));
-    printf("\nCollisions: %d\n", GetMaxCountCollisions(hashTable));
+    printf("\nMax collision: %d\n", GetMaxCountCollisions(hashTable));
 
-    FreeString(str);
+    WriteEachNodeCollision(hashTable);
+
     FreeHashTable(hashTable);
 
     system("pause");
