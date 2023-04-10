@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "DooNeGo.h"
 #include "HashTable.h"
 #include "Menu.h"
 #include "ApplicationContext.h"
+#include "String.h"
+#include "ConsoleReader.h"
+#include "ConsoleWriter.h"
 
 Menu *InitializeMenu()
 {

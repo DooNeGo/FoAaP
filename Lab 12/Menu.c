@@ -27,7 +27,7 @@ CodeStatus MenuAddChildren(Menu *parent, Menu *children)
 {
     if (parent->children == NULL)
         parent->children = ArrayConstructor(1, sizeof(Menu));
-    ArrayPtrAdd(parent->children, children);
+    ArrayAddPtr(parent->children, children);
     return SUCCESSFUL_CODE;
 }
 

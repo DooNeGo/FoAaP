@@ -16,7 +16,7 @@ typedef enum CodeStatus
 typedef struct Array Array;
 Array *ArrayConstructor(unsigned int initialSize, int elemSize);
 CodeStatus ArrayAdd(Array *arr, const void *elem);
-CodeStatus ArrayPtrAdd(Array *arr, void *newElem);
+CodeStatus ArrayAddPtr(Array *arr, void *newElem);
 void *ArrayGetElem(Array *arr, unsigned int index);
 int ArrayGetCount(const Array *arr);
 int ArrayGetCapacity(const Array *arr);

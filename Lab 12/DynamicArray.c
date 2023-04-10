@@ -44,7 +44,7 @@ CodeStatus ArrayAdd(Array *arr, const void *elem)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus ArrayPtrAdd(Array *arr, void *newElem)
+CodeStatus ArrayAddPtr(Array *arr, void *newElem)
 {
     if (arr->count == arr->capacity)
         ResizeArr(arr);
