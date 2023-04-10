@@ -11,7 +11,7 @@ typedef struct Array
     int elemSize;
 } Array;
 
-Array *ConstructArray(unsigned int initialSize, int elemSize)
+Array *ArrayConstructor(unsigned int initialSize, int elemSize)
 {
     if (initialSize == 0)
         initialSize = 1;
@@ -33,7 +33,7 @@ void ResizeArr(Array *arr)
     arr->elems = newArr;
 }
 
-CodeStatus InsertElemToArray(Array *arr, const void *elem)
+CodeStatus ArrayAdd(Array *arr, const void *elem)
 {
     void *newArrElem = malloc(arr->elemSize);
     memcpy(newArrElem, elem, arr->elemSize);
@@ -44,7 +44,7 @@ CodeStatus InsertElemToArray(Array *arr, const void *elem)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus InsertPtrElemToArray(Array *arr, void *newElem)
+CodeStatus ArrayPtrAdd(Array *arr, void *newElem)
 {
     if (arr->count == arr->capacity)
         ResizeArr(arr);
@@ -53,32 +53,42 @@ CodeStatus InsertPtrElemToArray(Array *arr, void *newElem)
     return SUCCESSFUL_CODE;
 }
 
-const void *GetArrElem(Array *arr, unsigned int index)
+void *ArrayGetElem(Array *arr, unsigned int index)
 {
     if (index >= arr->count)
         return NULL;
     return arr->elems[index];
 }
 
-CodeStatus SetArrElem(Array *arr, const void *newElem, unsigned int index)
+CodeStatus ArraySetPtrElem(Array *arr, void *newElem, unsigned int index)
 {
     if (index >= arr->count)
         return UNSUCCESSFUL_CODE;
-    memcpy(arr->elems[index], newElem, arr->elemSize);
+    arr->elems[index] = newElem;
     return SUCCESSFUL_CODE;
 }
 
-int GetArrCount(const Array *arr)
+CodeStatus ArraySetElem(Array *arr, const void *elem, unsigned int index)
+{
+    void *newElem = malloc(arr->elemSize);
+    memcpy(newElem, elem, arr->elemSize);
+    if (index >= arr->count)
+        return UNSUCCESSFUL_CODE;
+    arr->elems[index] = newElem;
+    return SUCCESSFUL_CODE;
+}
+
+int ArrayGetCount(const Array *arr)
 {
     return arr->count;
 }
 
-int GetArrCapacity(const Array *arr)
+int ArrayGetCapacity(const Array *arr)
 {
     return arr->capacity;
 }
 
-CodeStatus RemoveArrayElemAt(Array *arr, unsigned int index)
+CodeStatus ArrayRemoveElemAt(Array *arr, unsigned int index)
 {
     if (index >= arr->count)
         return ArgumentOutOfRangeException;
@@ -90,19 +100,19 @@ CodeStatus RemoveArrayElemAt(Array *arr, unsigned int index)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus RemoveArrayElem(Array *arr, const void *elem)
+CodeStatus ArrayRemoveElem(Array *arr, const void *elem)
 {
     for (int index = 0; index < arr->count; index++)
     {
         if (memcmp(arr->elems[index], elem, arr->elemSize) == 0)
         {
-            return RemoveArrayElemAt(arr, index);
+            return ArrayRemoveElemAt(arr, index);
         }
     }
     return UNSUCCESSFUL_CODE;
 }
 
-CodeStatus ClearArray(Array *arr)
+CodeStatus ArrayClear(Array *arr)
 {
     for (int i = 0; i < arr->count; i++)
         free(arr->elems[i]);
@@ -113,8 +123,10 @@ CodeStatus ClearArray(Array *arr)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus FreeArray(Array *arr)
+CodeStatus ArrayFree(Array *arr)
 {
+    if (arr == NULL)
+        return UNSUCCESSFUL_CODE;
     for (int i = 0; i < arr->count; i++)
         free(arr->elems[i]);
     free(arr->elems);

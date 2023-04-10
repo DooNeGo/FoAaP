@@ -9,7 +9,7 @@ typedef struct Node
     unsigned int countChildren;
 } Node;
 
-Node *ConstructNode()
+Node *NodeConstructor()
 {
     Node *node = (Node *)malloc(sizeof(Node));
     node->value = NULL;
@@ -19,46 +19,48 @@ Node *ConstructNode()
     return node;
 }
 
-Bool CheckNodeValue(const Node *node, const String *value)
+Bool NodeCheckValue(const Node *node, const String *value)
 {
     if (node == NULL)
         return False;
     if (IsEqualStrings(node->value, value) && node->status == Exist)
         return True;
-    return CheckNodeValue(node->children, value);
+    return NodeCheckValue(node->children, value);
 }
 
-CodeStatus SetValueToNode(Node *node, const String *value)
+CodeStatus NodeSetValue(Node *node, String *value)
 {
     if (node == NULL || value == NULL || IsEqualStrings(node->value, value))
         return UNSUCCESSFUL_CODE;
-    if (GetNodeStatus(node) == Deleted)
+    if (NodeStatus(node) == Deleted)
     {
-        if (node->value == NULL)
-            node->value = ConstructString(2);
-        else
-            ClearString(node->value, 2);
-        SetPtrString(node->value, value);
+        StringFree(node->value);
+        node->value = value;
         node->status = Exist;
         return SUCCESSFUL_CODE;
     }
     if (node->children == NULL)
-        node->children = ConstructNode();
+        node->children = NodeConstructor();
     node->countChildren++;
-    return SetValueToNode(node->children, value);
+    return NodeSetValue(node->children, value);
 }
 
-CodeStatus FreeNode(Node *node)
+String *NodeGetValue(Node *node)
+{
+    return node->value;
+}
+
+CodeStatus NodeFree(Node *node)
 {
     if (node == NULL)
         return UNSUCCESSFUL_CODE;
-    FreeString(node->value);
-    FreeNode(node->children);
+    StringFree(node->value);
+    NodeFree(node->children);
     free(node);
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus DeleteNode(Node *node)
+CodeStatus NodeSetDeletedStatus(Node *node)
 {
     if (node == NULL)
         return UNSUCCESSFUL_CODE;
@@ -66,38 +68,33 @@ CodeStatus DeleteNode(Node *node)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus FindAndDeleteNode(Node *node, const String *value)
+CodeStatus NodeDelete(Node *node, const String *value)
 {
     if (node == NULL)
         return UNSUCCESSFUL_CODE;
     if (IsEqualStrings(node->value, value))
-        return DeleteNode(node);
-    return FindAndDeleteNode(node->children, value);
+        return NodeSetDeletedStatus(node);
+    return NodeDelete(node->children, value);
 }
 
-const String *GetNodeValue(const Node *node)
-{
-    return node->value;
-}
-
-int GetSizeOfNode()
+int NodeSize()
 {
     return sizeof(Node);
 }
 
-int GetChildrenCount(const Node *node)
+int NodeChildrenCount(const Node *node)
 {
     if (node == NULL)
         return NULL;
     return node->countChildren;
 }
 
-const Node *GetNodeChildren(const Node *node)
+Node *NodeChildren(const Node *node)
 {
     return node->children;
 }
 
-Status GetNodeStatus(const Node *node)
+Status NodeStatus(const Node *node)
 {
     return node->status;
 }

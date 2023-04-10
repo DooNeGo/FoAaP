@@ -7,42 +7,42 @@
 
 Menu *InitializeMenu()
 {
-    Menu *mainMenu = ConstructMenu("Main menu");
+    Menu *mainMenu = MenuConstructor("HTable menu");
 
-    Menu *hashTableMenu = ConstructMenu("HS interaction");
-    Menu *hashTableMenuStats = ConstructMenu("HS statistics");
+    Menu *hashTableMenu = MenuConstructor("Interaction");
+    Menu *hashTableMenuStats = MenuConstructor("Stats");
 
-    Menu *addHashTableItem = ConstructMenu("Add");
-    Menu *deleteHashTableItem = ConstructMenu("Delete");
+    Menu *addHashTableItem = MenuConstructor("Add");
+    Menu *deleteHashTableItem = MenuConstructor("Delete");
 
-    AddMenuChildren(mainMenu, hashTableMenu);
-    AddMenuChildren(mainMenu, hashTableMenuStats);
+    MenuAddChildren(mainMenu, hashTableMenu);
+    MenuAddChildren(mainMenu, hashTableMenuStats);
 
-    AddMenuChildren(hashTableMenu, addHashTableItem);
-    AddMenuChildren(hashTableMenu, deleteHashTableItem);
+    MenuAddChildren(hashTableMenu, addHashTableItem);
+    MenuAddChildren(hashTableMenu, deleteHashTableItem);
 
     return mainMenu;
 }
 
 int main(int argc, char **argv)
 {
-    HashTable *hashTable = ConstructHashTable(20);
-    ApplicationContext *appContext = ConstructAppContext();
+    HashTable *hashTable = HashTableConstructor(20);
+    ApplicationContext *appContext = AppContextConstructor();
 
-    SetPtrHashTableToAppContext(appContext, hashTable);
+    AppContextSetHTable(appContext, hashTable);
 
     /* printf("Input:\n");
     for (int i = 0; i < 20; i++)
     {
-        String *str = ReadStringPtr();
-        InsertValueToHashTable(hashTable, str);
-        FreeString(str);
+        String *str = ReadString();
+        HashTableAdd(hashTable, str);
+        StringFree(str);
     }
 
     printf("\nOutput:\n");
     for (int i = 0; i < GetHashTableCount(hashTable); i++)
     {
-        WriteHashTableNode(GetHashTableNode(hashTable, i));
+        WriteHashTableNode(HashTableNode(hashTable, i));
     }
     printf("\nMax collision: %d\n", GetMaxCountCollisions(hashTable));
 
@@ -51,10 +51,11 @@ int main(int argc, char **argv)
 
     Menu *menu = InitializeMenu();
 
-    ProcessMenu(menu, appContext);
+    MenuProcess(menu, appContext);
 
-    FreeHashTable(hashTable);
-    FreeMenu(menu);
+    HashTableFree(hashTable);
+    MenuFree(menu);
+
     system("pause");
     return SUCCESSFUL_CODE;
 }

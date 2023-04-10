@@ -25,18 +25,17 @@ typedef enum Bool
 #define STRING
 
 typedef struct String String;
-String *ConstructString(unsigned int initialSize);
-CodeStatus InsertCharArrToString(String *arr, const char *string);
-CodeStatus InsertElemToString(String *arr, const char elem);
-CodeStatus ClearString(String *str, int initialSize);
-char *ConvertStringToCharArray(const String *arr);
-CodeStatus SetCharArrToString(String *arr, const char *string);
-int GetSizeOfString();
-char GetStringElem(const String *str, unsigned int index);
-int GetStringCount(const String *str);
-CodeStatus SetPtrString(String *dest, const String *source);
-CodeStatus SetString(String *dest, const String source);
+String *StringConstructor(unsigned int initialSize);
+CodeStatus StringAdd(String *arr, const char *string);
+CodeStatus StringAddCharElem(String *arr, const char elem);
+CodeStatus StringClear(String *str, int initialSize);
+char *StringGetValue(const String *arr);
+CodeStatus StringSetValue(String *arr, const char *string);
+int StringSize();
+char StringElem(const String *str, unsigned int index);
+int StringCount(const String *str);
 Bool IsEqualStrings(const String *str, const String *str1);
-CodeStatus FreeString(String *str);
+Bool StringEqual(const String *str, const void *elem);
+CodeStatus StringFree(String *str);
 
 #endif

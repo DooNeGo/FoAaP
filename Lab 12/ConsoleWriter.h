@@ -5,7 +5,9 @@
 #define WRITE_STRING
 
 CodeStatus WriteString(const String *str);
-CodeStatus WriteHashTableNode(const Node *node);
+CodeStatus WriteLineString(const String *str);
+CodeStatus WriteMessage(const char *message, const char *color);
+CodeStatus WriteHashTableNode(Node *node);
 CodeStatus WriteEachNodeCollision(HashTable *hashTable);
 
 #endif

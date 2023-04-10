@@ -5,9 +5,9 @@
 #define MENU
 
 typedef struct Menu Menu;
-Menu *ConstructMenu(const char *name);
-CodeStatus AddMenuChildren(Menu *parent, Menu *children);
-CodeStatus ProcessMenu(const Menu *menu, ApplicationContext *appContext);
-CodeStatus FreeMenu(Menu *menu);
+Menu *MenuConstructor(const char *name);
+CodeStatus MenuAddChildren(Menu *parent, Menu *children);
+CodeStatus MenuProcess(const Menu *menu, ApplicationContext *appContext);
+CodeStatus MenuFree(Menu *menu);
 
 #endif

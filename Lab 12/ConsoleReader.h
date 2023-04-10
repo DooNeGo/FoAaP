@@ -3,7 +3,6 @@
 #ifndef READ_STRING
 #define READ_STRING
 
-String ReadString();
-String *ReadStringPtr();
+String *ReadString();
 
 #endif

@@ -4,9 +4,8 @@
 #define APP_CONTEXT
 
 typedef struct ApplicationContext ApplicationContext;
-ApplicationContext *ConstructAppContext();
-HashTable *GetHashTableAppContext(ApplicationContext *appContext);
-CodeStatus SetPtrHashTableToAppContext(ApplicationContext *appContext, HashTable *hashTable);
-const String *GetBackValue(const ApplicationContext *appContext);
+ApplicationContext *AppContextConstructor();
+HashTable *AppContextGetHTable(const ApplicationContext *appContext);
+CodeStatus AppContextSetHTable(ApplicationContext *appContext, HashTable *hashTable);
 
 #endif

@@ -9,7 +9,7 @@ typedef struct String
     int capacity;
 } String;
 
-String *ConstructString(unsigned int initialSize)
+String *StringConstructor(unsigned int initialSize)
 {
     if (initialSize == 0)
         initialSize = 2;
@@ -30,7 +30,7 @@ void ResizeString(String *arr)
     arr->elems = newArr;
 }
 
-CodeStatus InsertElemToString(String *arr, const char elem)
+CodeStatus StringAddCharElem(String *arr, const char elem)
 {
     char newArrElem = elem;
     if (arr->count == arr->capacity)
@@ -40,54 +40,36 @@ CodeStatus InsertElemToString(String *arr, const char elem)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus SetCharArrToString(String *str, const char *string)
+CodeStatus StringSetValue(String *str, const char *string)
 {
-    if (GetStringCount(str) > 0)
-        ClearString(str, 2);
+    if (StringCount(str) > 0)
+        StringClear(str, 2);
     int size = strlen(string);
     for (int i = 0; i < size; i++)
     {
-        InsertElemToString(str, string[i]);
+        StringAddCharElem(str, string[i]);
     }
     return SUCCESSFUL_CODE;
 }
 
-char GetStringElem(const String *str, unsigned int index)
+char StringElem(const String *str, unsigned int index)
 {
     if (index >= str->count)
         return NULL;
     return str->elems[index];
 }
 
-CodeStatus SetPtrString(String *dest, const String *source)
-{
-    if (dest->count > 0)
-        ClearString(dest, 2);
-    for (int i = 0; i < GetStringCount(source); i++)
-        InsertElemToString(dest, GetStringElem(source, i));
-    return SUCCESSFUL_CODE;
-}
-
-CodeStatus SetString(String *dest, const String source)
-{
-    if (dest->count > 0)
-        ClearString(dest, 2);
-    for (int i = 0; i < GetStringCount(&source); i++)
-        InsertElemToString(dest, GetStringElem(&source, i));
-    return SUCCESSFUL_CODE;
-}
-
-CodeStatus InsertCharArrToString(String *arr, const char *string)
+CodeStatus StringAdd(String *arr, const char *string)
 {
     int size = strlen(string);
     for (int i = 0; i < size; i++)
     {
-        InsertElemToString(arr, string[i]);
+        StringAddCharElem(arr, string[i]);
     }
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus ClearString(String *str, int initialSize)
+CodeStatus StringClear(String *str, int initialSize)
 {
     free(str->elems);
     str->elems = (char *)malloc(sizeof(char) * initialSize);
@@ -96,7 +78,7 @@ CodeStatus ClearString(String *str, int initialSize)
     return SUCCESSFUL_CODE;
 }
 
-char *ConvertStringToCharArray(const String *arr)
+char *StringGetValue(const String *arr)
 {
     if (arr->count < 1)
         return NULL;
@@ -105,12 +87,12 @@ char *ConvertStringToCharArray(const String *arr)
     return arrChar;
 }
 
-int GetSizeOfString()
+int StringSize()
 {
     return sizeof(String);
 }
 
-int GetStringCount(const String *str)
+int StringCount(const String *str)
 {
     return str->count;
 }
@@ -119,15 +101,24 @@ Bool IsEqualStrings(const String *str, const String *str1)
 {
     if (str == NULL || str1 == NULL || str->count != str1->count)
         return False;
-    if (memcmp(str->elems, str1->elems, str->count) == 0)
+    if (memcmp(StringGetValue(str), StringGetValue(str1), StringCount(str)) == 0)
         return True;
     return False;
 }
 
-CodeStatus FreeString(String *str)
+Bool StringEqual(const String *str, const void *elem)
+{
+    if (str == NULL || elem == NULL)
+        return False;
+    if (memcmp(StringGetValue(str), elem, StringCount(str)) == 0)
+        return True;
+    return False;
+}
+
+CodeStatus StringFree(String *str)
 {
     if (str == NULL)
-        return SUCCESSFUL_CODE;
+        return UNSUCCESSFUL_CODE;
     free(str->elems);
     free(str);
     return SUCCESSFUL_CODE;

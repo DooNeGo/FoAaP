@@ -24,13 +24,13 @@ const unsigned char seedTable[256] =
 
 unsigned int GetHashCode(const String *str)
 {
-    unsigned int hash1 = GetStringCount(str);
-    unsigned int hash2 = GetStringCount(str);
+    unsigned int hash1 = StringCount(str);
+    unsigned int hash2 = StringCount(str);
     unsigned char index;
 
-    for (unsigned int i = 0; i < GetStringCount(str); i++)
+    for (unsigned int i = 0; i < StringCount(str); i++)
     {
-        index = (GetStringElem(str, i) + i) & 255;
+        index = (StringElem(str, i) + i) & 255;
 
         hash1 += seedTable[index];
         hash1 = LROT(hash1 + ((hash1 << 6) ^ (hash1 >> 8)));
@@ -40,9 +40,9 @@ unsigned int GetHashCode(const String *str)
     }
 
     hash1 = LROT(hash1 + ((hash1 << 6) ^ (hash1 >> 8)));
-    hash1 += seedTable[GetStringCount(str)];
+    hash1 += seedTable[StringCount(str)];
     hash2 = RROT(hash2 + ((hash2 << 6) ^ (hash2 >> 8)));
-    hash2 += seedTable[GetStringCount(str)];
+    hash2 += seedTable[StringCount(str)];
 
     return hash1 ^ hash2;
 }
@@ -51,11 +51,11 @@ unsigned int GetHashCode(const String *str)
 
 unsigned int GetHashCode1(const String *str)
 {
-    unsigned int hash = GetStringCount(str);
+    unsigned int hash = StringCount(str);
 
-    for (int i = 0; i < GetStringCount(str); i++)
+    for (int i = 0; i < StringCount(str); i++)
     {
-        hash ^= seedTable[(GetStringElem(str, i) + i) & 255];
+        hash ^= seedTable[(StringElem(str, i) + i) & 255];
         hash = hash * CONSTVALUE;
     }
 

@@ -8,32 +8,22 @@ typedef struct String
     int capacity;
 } String;
 
-String ReadString()
+String *ReadString()
 {
     fflush(stdin);
-    String arr = *ConstructString(2);
-    while (1)
-    {
-        char temp;
-        scanf("%c", &temp);
-        if (temp == '\n')
-            break;
-        InsertElemToString(&arr, temp);
-    }
-    return arr;
-}
-
-String *ReadStringPtr()
-{
-    //fflush(stdin);
-    String *arr = ConstructString(2);
+    String *str = StringConstructor(2);
     while (1)
     {
         char temp;
         scanf("%c", &temp);
         if (temp == '\n' || temp == ' ' || temp == '\t')
             break;
-        InsertElemToString(arr, temp);
+        StringAddCharElem(str, temp);
     }
-    return arr;
+    if (StringEqual(str, "0"))
+    {
+        StringFree(str);
+        return NULL;
+    }
+    return str;
 }

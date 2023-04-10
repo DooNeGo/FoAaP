@@ -4,13 +4,13 @@
 #define HASH_TABLE
 
 typedef struct HashTable HashTable;
-HashTable *ConstructHashTable(unsigned int initialSize);
-int GetHashTableCount(const HashTable *hashTable);
-const Node *GetHashTableNode(const HashTable *hashTable, unsigned int index);
-Bool FindHashTableNodeValue(const HashTable *hashTable, const String *value);
-CodeStatus DeleteHashTableNode(HashTable *hashTable, const String *value);
-CodeStatus InsertValueToHashTable(HashTable *hashTable, const String *value);
-CodeStatus FreeHashTable(HashTable *hashTable);
+HashTable *HashTableConstructor(unsigned int initialSize);
+int HashTableCount(const HashTable *hashTable);
+Node *HashTableNode(const HashTable *hashTable, unsigned int index);
+Bool HashTableFindValue(const HashTable *hashTable, const String *value);
+CodeStatus HashTableDeleteValue(HashTable *hashTable, const String *value);
+CodeStatus HashTableAdd(HashTable *hashTable, String *value);
+CodeStatus HashTableFree(HashTable *hashTable);
 
 int GetMaxCountCollisions(const HashTable *hashTable);
 int GetTableFilledCount(HashTable *hashTable);

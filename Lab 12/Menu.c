@@ -6,7 +6,7 @@
 #include "ConsoleWriter.h"
 #include "ConsoleReader.h"
 
-#define Clear_Console system("cls");
+#define ClearConsole system("cls");
 
 typedef struct Menu
 {
@@ -14,92 +14,95 @@ typedef struct Menu
     Array *children;
 } Menu;
 
-Menu *ConstructMenu(const char *name)
+Menu *MenuConstructor(const char *name)
 {
     Menu *menu = (Menu *)malloc(sizeof(Menu));
-    menu->name = ConstructString(2);
-    SetCharArrToString(menu->name, name);
+    menu->name = StringConstructor(2);
+    StringSetValue(menu->name, name);
     menu->children = NULL;
     return menu;
 }
 
-CodeStatus AddMenuChildren(Menu *parent, Menu *children)
+CodeStatus MenuAddChildren(Menu *parent, Menu *children)
 {
     if (parent->children == NULL)
-        parent->children = ConstructArray(1, sizeof(Menu));
-    InsertPtrElemToArray(parent->children, children);
+        parent->children = ArrayConstructor(1, sizeof(Menu));
+    ArrayPtrAdd(parent->children, children);
     return SUCCESSFUL_CODE;
 }
 
-const String *GetChildrenMenuName(const Menu *menu, unsigned int index)
+const String *MenuChildrenName(const Menu *menu, unsigned int index)
 {
-    if (index >= GetArrCount(menu->children) || menu->children == NULL)
+    if (index >= ArrayGetCount(menu->children) || menu->children == NULL)
         return NULL;
-    return ((Menu *)GetArrElem(menu->children, index))->name;
+    return ((Menu *)ArrayGetElem(menu->children, index))->name;
 }
 
-const Menu *GetMenuChildren(const Menu *menu, unsigned int index)
+const Menu *MenuChildren(const Menu *menu, unsigned int index)
 {
-    if (index > GetArrCount(menu->children) || menu->children == NULL)
+    if (index > ArrayGetCount(menu->children) || menu->children == NULL)
         return NULL;
-    return (Menu *)GetArrElem(menu->children, index);
+    return (Menu *)ArrayGetElem(menu->children, index);
 }
 
-int GetMenuChildrenCount(const Menu *menu)
+int MenuChildrenCount(const Menu *menu)
 {
     if (menu->children == NULL)
         return NULL;
-    return GetArrCount(menu->children);
+    return ArrayGetCount(menu->children);
 }
 
-CodeStatus FreeMenu(Menu *menu)
+CodeStatus MenuFree(Menu *menu)
 {
-    FreeArray(menu->children);
-    FreeString(menu->name);
-    return SUCCESSFUL_CODE;
+    StringFree(menu->name);
+    for (int i = 0; i < MenuChildrenCount(menu); i++)
+        MenuFree((Menu *)ArrayGetElem(menu->children, i));
+    return ArrayFree(menu->children);
 }
 
-CodeStatus ProcessAddMenu(ApplicationContext *appContext)
+CodeStatus MenuAddProcess(ApplicationContext *appContext)
 {
-    system("cls");
+    ClearConsole;
     fflush(stdin);
     printf("-----Add-----\n");
     printf("Enter value (0 - Return): ");
-    String *newValue = ReadStringPtr();
-    if (IsEqualStrings(newValue, GetBackValue(appContext)))
-        return SUCCESSFUL_CODE;
+    String *newValue = ReadString();
+    if (newValue == NULL)
+        return UNSUCCESSFUL_CODE;
     system("pause");
-    InsertValueToHashTable(GetHashTableAppContext(appContext), newValue);
-    FreeString(newValue);
+    HashTableAdd(AppContextGetHTable(appContext), newValue);
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus ProcessMenu(const Menu *menu, ApplicationContext *appContext)
+void ShowChildren(const Menu *menu)
 {
+    for (int i = 0; i < MenuChildrenCount(menu); i++)
+    {
+        printf("%d - ", i + 1);
+        WriteString(MenuChildrenName(menu, i));
+        printf("\n");
+    }
+    printf("0 - Return\n");
+}
+
+CodeStatus MenuProcess(const Menu *menu, ApplicationContext *appContext)
+{
+    if (StringEqual(menu->name, "Add"))
+        return MenuAddProcess(appContext);
     while (1)
     {
-        String *name = ConstructString(GetStringCount(menu->name));
-        SetCharArrToString(name, "Add");
-        if (IsEqualStrings(menu->name, name))
-            return ProcessAddMenu(appContext);
         int value;
-        Clear_Console;
+        ClearConsole;
         printf("-----");
         WriteString(menu->name);
         printf("-----\n");
-        for (int i = 0; i < GetMenuChildrenCount(menu); i++)
-        {
-            printf("%d - ", i + 1);
-            WriteString(GetChildrenMenuName(menu, i));
-            printf("\n");
-        }
-        printf("0 - Return\n");
+        ShowChildren(menu);
         scanf("%d", &value);
-        if (value <= 0 || value > GetMenuChildrenCount(menu))
+        if (value == 0)
             return SUCCESSFUL_CODE;
-        else if (value > 0 && value <= GetMenuChildrenCount(menu))
-        {
-            ProcessMenu(GetMenuChildren(menu, value - 1), appContext);
-        }
+        else if (value > 0 && value <= MenuChildrenCount(menu))
+            MenuProcess(MenuChildren(menu, value - 1), appContext);
+        else
+            WriteMessage("Wrong value", "Red");
     }
 }

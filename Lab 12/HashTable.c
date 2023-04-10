@@ -13,13 +13,11 @@ typedef struct HashTable
 CodeStatus InitializeHashTableNodes(HashTable *hashTable)
 {
     for (int i = 0; i < hashTable->capacity; i++)
-    {
         hashTable->nodes[i] = NULL;
-    }
     return SUCCESSFUL_CODE;
 }
 
-HashTable *ConstructHashTable(unsigned int initialSize)
+HashTable *HashTableConstructor(unsigned int initialSize)
 {
     if (initialSize == 0)
         initialSize = 1;
@@ -31,28 +29,28 @@ HashTable *ConstructHashTable(unsigned int initialSize)
     return hashTable;
 }
 
-int GetHashTableCount(const HashTable *hashTable)
+int HashTableCount(const HashTable *hashTable)
 {
     return hashTable->capacity;
 }
 
-const Node *GetHashTableNode(const HashTable *hashTable, unsigned int index)
+Node *HashTableNode(const HashTable *hashTable, unsigned int index)
 {
-    if (hashTable == NULL || index >= GetHashTableCount(hashTable))
+    if (hashTable == NULL || index >= HashTableCount(hashTable))
         return NULL;
     return hashTable->nodes[index];
 }
 
-Bool FindHashTableNodeValue(const HashTable *hashTable, const String *value)
+Bool HashTableFindValue(const HashTable *hashTable, const String *value)
 {
-    int hash = GetHashCode(value) % GetHashTableCount(hashTable);
-    return CheckNodeValue(GetHashTableNode(hashTable, hash), value);
+    int hash = GetHashCode(value) % HashTableCount(hashTable);
+    return NodeCheckValue(HashTableNode(hashTable, hash), value);
 }
 
-CodeStatus DeleteHashTableNode(HashTable *hashTable, const String *value)
+CodeStatus HashTableDeleteValue(HashTable *hashTable, const String *value)
 {
-    int hash = GetHashCode(value) % GetHashTableCount(hashTable);
-    if (FindAndDeleteNode(hashTable->nodes[hash], value) == SUCCESSFUL_CODE)
+    int hash = GetHashCode(value) % HashTableCount(hashTable);
+    if (NodeDelete(hashTable->nodes[hash], value) == SUCCESSFUL_CODE)
     {
         hashTable->countDeletedNodes++;
         return SUCCESSFUL_CODE;
@@ -60,16 +58,16 @@ CodeStatus DeleteHashTableNode(HashTable *hashTable, const String *value)
     return UNSUCCESSFUL_CODE;
 }
 
-CodeStatus InsertOldNodesToHashTable(HashTable *hashTable, const Node *node)
+CodeStatus InsertOldNodesToHashTable(HashTable *hashTable, Node *node)
 {
     if (node == NULL)
         return UNSUCCESSFUL_CODE;
-    int childrenCount = GetChildrenCount(node);
+    int childrenCount = NodeChildrenCount(node);
     for (int j = 0; j <= childrenCount; j++)
     {
-        if (GetNodeStatus(node) == Exist)
-            InsertValueToHashTable(hashTable, GetNodeValue(node));
-        node = GetNodeChildren(node);
+        if (NodeStatus(node) == Exist)
+            HashTableAdd(hashTable, NodeGetValue(node));
+        node = NodeChildren(node);
     }
     return SUCCESSFUL_CODE;
 }
@@ -79,11 +77,11 @@ CodeStatus ResizeHashTable(HashTable *hashTable)
     if (hashTable == NULL)
         return UNSUCCESSFUL_CODE;
     int newHashTableSize = hashTable->capacity * 2;
-    HashTable *newHashTable = ConstructHashTable(newHashTableSize);
-    for (int i = 0; i < GetHashTableCount(hashTable); i++)
+    HashTable *newHashTable = HashTableConstructor(newHashTableSize);
+    for (int i = 0; i < HashTableCount(hashTable); i++)
     {
-        InsertOldNodesToHashTable(newHashTable, GetHashTableNode(hashTable, i));
-        FreeNode(hashTable->nodes[i]);
+        InsertOldNodesToHashTable(newHashTable, HashTableNode(hashTable, i));
+        NodeFree(hashTable->nodes[i]);
     }
     free(hashTable->nodes);
     hashTable->nodes = newHashTable->nodes;
@@ -93,37 +91,37 @@ CodeStatus ResizeHashTable(HashTable *hashTable)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus InsertValueToHashTable(HashTable *hashTable, const String *value)
+CodeStatus HashTableAdd(HashTable *hashTable, String *value)
 {
     if (hashTable == NULL || value == NULL)
         return UNSUCCESSFUL_CODE;
-    int hash = GetHashCode(value) % GetHashTableCount(hashTable);
-    if (GetHashTableNode(hashTable, hash) == NULL)
-        hashTable->nodes[hash] = ConstructNode();
-    if (GetChildrenCount(GetHashTableNode(hashTable, hash)) > 3)
+    int hash = GetHashCode(value) % HashTableCount(hashTable);
+    if (HashTableNode(hashTable, hash) == NULL)
+        hashTable->nodes[hash] = NodeConstructor();
+    if (NodeChildrenCount(HashTableNode(hashTable, hash)) > 3)
     {
         ResizeHashTable(hashTable);
-        hash = GetHashCode(value) % GetHashTableCount(hashTable);
+        hash = GetHashCode(value) % HashTableCount(hashTable);
     }
-    return SetValueToNode(hashTable->nodes[hash], value);
+    return NodeSetValue(hashTable->nodes[hash], value);
 }
 
 int GetMaxCountCollisions(const HashTable *hashTable)
 {
     int maxCountCollisions = 0;
-    for (int i = 0; i < GetHashTableCount(hashTable); i++)
+    for (int i = 0; i < HashTableCount(hashTable); i++)
     {
-        const Node *node = GetHashTableNode(hashTable, i);
-        if (maxCountCollisions < GetChildrenCount(node))
-            maxCountCollisions = GetChildrenCount(node);
+        const Node *node = HashTableNode(hashTable, i);
+        if (maxCountCollisions < NodeChildrenCount(node))
+            maxCountCollisions = NodeChildrenCount(node);
     }
     return maxCountCollisions;
 }
 
-CodeStatus FreeHashTable(HashTable *hashTable)
+CodeStatus HashTableFree(HashTable *hashTable)
 {
-    for (int i = 0; i < GetHashTableCount(hashTable); i++)
-        FreeNode(hashTable->nodes[i]);
+    for (int i = 0; i < HashTableCount(hashTable); i++)
+        NodeFree(hashTable->nodes[i]);
     free(hashTable);
     return SUCCESSFUL_CODE;
 }
@@ -131,9 +129,9 @@ CodeStatus FreeHashTable(HashTable *hashTable)
 int GetTableFilledCount(HashTable *hashTable)
 {
     int counter = 0;
-    for (int i = 0; i < GetHashTableCount(hashTable); i++)
+    for (int i = 0; i < HashTableCount(hashTable); i++)
     {
-        const Node *node = GetHashTableNode(hashTable, i);
+        const Node *node = HashTableNode(hashTable, i);
         if (node != NULL)
             counter++;
     }

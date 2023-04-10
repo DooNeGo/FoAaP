@@ -38,15 +38,15 @@ typedef enum CodeStatus
 #define NODE
 
 typedef struct Node Node;
-Node *ConstructNode();
-CodeStatus FindAndDeleteNode(Node *node, const String *value);
-CodeStatus SetValueToNode(Node *node, const String *value);
-const String *GetNodeValue(const Node *node);
-int GetChildrenCount(const Node *node);
-const Node *GetNodeChildren(const Node *node);
-Status GetNodeStatus(const Node *node);
-Bool CheckNodeValue(const Node *node, const String *value);
-int GetSizeOfNode();
-CodeStatus FreeNode(Node *node);
+Node *NodeConstructor();
+CodeStatus NodeDelete(Node *node, const String *value);
+CodeStatus NodeSetValue(Node *node, String *value);
+String *NodeGetValue(Node *node);
+int NodeChildrenCount(const Node *node);
+Node *NodeChildren(const Node *node);
+Status NodeStatus(const Node *node);
+Bool NodeCheckValue(const Node *node, const String *value);
+int NodeSize();
+CodeStatus NodeFree(Node *node);
 
 #endif

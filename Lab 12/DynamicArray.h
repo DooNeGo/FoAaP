@@ -14,16 +14,16 @@ typedef enum CodeStatus
 #define DYNAMIC_ARRAY
 
 typedef struct Array Array;
-Array *ConstructArray(unsigned int initialSize, int elemSize);
-CodeStatus InsertElemToArray(Array *arr, const void *elem);
-CodeStatus InsertPtrElemToArray(Array *arr, void *newElem);
-const void *GetArrElem(Array *arr, unsigned int index);
-int GetArrCount(const Array *arr);
-int GetArrCapacity(const Array *arr);
-CodeStatus SetArrElem(Array *arr, const void *newElem, unsigned int index);
-CodeStatus RemoveArrayElemAt(Array *arr, unsigned int index);
-CodeStatus RemoveArrayElem(Array *arr, const void *elem);
-CodeStatus ClearArray(Array *arr);
-CodeStatus FreeArray(Array *arr);
+Array *ArrayConstructor(unsigned int initialSize, int elemSize);
+CodeStatus ArrayAdd(Array *arr, const void *elem);
+CodeStatus ArrayPtrAdd(Array *arr, void *newElem);
+void *ArrayGetElem(Array *arr, unsigned int index);
+int ArrayGetCount(const Array *arr);
+int ArrayGetCapacity(const Array *arr);
+CodeStatus ArraySetPtrElem(Array *arr, void *newElem, unsigned int index);
+CodeStatus ArrayRemoveElemAt(Array *arr, unsigned int index);
+CodeStatus ArrayRemoveElem(Array *arr, const void *elem);
+CodeStatus ArrayClear(Array *arr);
+CodeStatus ArrayFree(Array *arr);
 
 #endif
