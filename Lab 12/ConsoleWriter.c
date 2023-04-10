@@ -10,8 +10,6 @@ CodeStatus WriteString(const String *str)
     {
         printf("%c", GetStringElem(str, i));
     }
-    if (GetStringCount(str) > 0)
-        printf("\n");
     return SUCCESSFUL_CODE;
 }
 
@@ -23,7 +21,10 @@ CodeStatus WriteHashTableNode(const Node *node)
     for (int i = 0; i <= countChildren; i++)
     {
         if (GetNodeStatus(node) == Exist)
+        {
             WriteString(GetNodeValue(node));
+            printf("\n");
+        }
         node = GetNodeChildren(node);
     }
     return SUCCESSFUL_CODE;

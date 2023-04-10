@@ -31,17 +31,6 @@ HashTable *ConstructHashTable(unsigned int initialSize)
     return hashTable;
 }
 
-/* int GetHashCode(const String *string, const int tableCount)
-{
-    int resultHash = 0;
-    for (int i = 0; i < GetStringCount(string); i++)
-    {
-        resultHash = (resultHash + GetStringElem(string, i)) % tableCount;
-    }
-    resultHash = (resultHash << 1 + 3) % tableCount;
-    return resultHash;
-} */
-
 int GetHashTableCount(const HashTable *hashTable)
 {
     return hashTable->capacity;
@@ -102,11 +91,6 @@ CodeStatus ResizeHashTable(HashTable *hashTable)
     hashTable->countDeletedNodes = 0;
     free(newHashTable);
     return SUCCESSFUL_CODE;
-}
-
-Bool CheckResize(HashTable *hashTable)
-{
-    return True;
 }
 
 CodeStatus InsertValueToHashTable(HashTable *hashTable, const String *value)

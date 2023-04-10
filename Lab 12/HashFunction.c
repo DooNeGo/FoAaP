@@ -1,4 +1,5 @@
 #include "HashFunction.h"
+#include "Actions.h"
 
 const unsigned char seedTable[256] =
     {0xa3, 0xd7, 0x09, 0x83, 0xf8, 0x48, 0xf6, 0xf4, 0xb3, 0x21, 0x15, 0x78, 0x99, 0xb1, 0xaf, 0xf9,
@@ -44,4 +45,19 @@ unsigned int GetHashCode(const String *str)
     hash2 += seedTable[GetStringCount(str)];
 
     return hash1 ^ hash2;
+}
+
+#define CONSTVALUE 1717
+
+unsigned int GetHashCode1(const String *str)
+{
+    unsigned int hash = GetStringCount(str);
+
+    for (int i = 0; i < GetStringCount(str); i++)
+    {
+        hash ^= seedTable[(GetStringElem(str, i) + i) & 255];
+        hash = hash * CONSTVALUE;
+    }
+
+    return hash;
 }
