@@ -16,10 +16,12 @@ Menu *InitializeMenu()
 
     Menu *addHashTableItem = MenuConstructor("Add");
     Menu *deleteHashTableItem = MenuConstructor("Delete");
+    Menu *showHTable = MenuConstructor("Show");
 
     MenuAddChildren(mainMenu, hashTableMenu);
     MenuAddChildren(mainMenu, hashTableMenuStats);
 
+    MenuAddChildren(hashTableMenu, showHTable);
     MenuAddChildren(hashTableMenu, addHashTableItem);
     MenuAddChildren(hashTableMenu, deleteHashTableItem);
 

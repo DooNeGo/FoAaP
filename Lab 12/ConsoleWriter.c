@@ -62,10 +62,19 @@ CodeStatus WriteHashTableNode(Node *node)
     return SUCCESSFUL_CODE;
 }
 
+CodeStatus WriteHashTable(const HashTable *hashTable)
+{
+    if (hashTable == NULL)
+        return UNSUCCESSFUL_CODE;
+    for (int i = 0; i < HashTableCapacity(hashTable); i++)
+        WriteHashTableNode(HashTableNode(hashTable, i));
+    return SUCCESSFUL_CODE;
+}
+
 CodeStatus WriteEachNodeCollision(HashTable *hashTable)
 {
     int temp = 0;
-    for (int i = 0; i < HashTableCount(hashTable); i++)
+    for (int i = 0; i < HashTableCapacity(hashTable); i++)
     {
         if (HashTableNode(hashTable, i) != NULL)
             printf("  %2d. %d\n", i + 1, NodeChildrenCount(HashTableNode(hashTable, i)) + 1);
@@ -74,6 +83,6 @@ CodeStatus WriteEachNodeCollision(HashTable *hashTable)
         temp += NodeChildrenCount(HashTableNode(hashTable, i));
     }
     printf("\nAverage collisions: %.2f", (double)temp / (double)GetTableFilledCount(hashTable));
-    printf("\nFill: %.2f\n", (double)GetTableFilledCount(hashTable) / (double)HashTableCount(hashTable));
+    printf("\nFill: %.2f\n", (double)GetTableFilledCount(hashTable) / (double)HashTableCapacity(hashTable));
     return SUCCESSFUL_CODE;
 }

@@ -69,8 +69,36 @@ CodeStatus MenuAddProcess(ApplicationContext *appContext)
     String *newValue = ReadString();
     if (newValue == NULL)
         return UNSUCCESSFUL_CODE;
-    system("pause");
     HashTableAdd(AppContextGetHTable(appContext), newValue);
+    WriteMessage("Successful add", "Green");
+    return SUCCESSFUL_CODE;
+}
+
+CodeStatus MenuDeleteProcess(ApplicationContext *appContext)
+{
+    ClearConsole;
+    fflush(stdin);
+    printf("-----Delete-----\n");
+    printf("Enter value (0 - Return): ");
+    String *valueString = ReadString();
+    if (valueString == NULL)
+        return UNSUCCESSFUL_CODE;
+    HashTableDeleteValue(AppContextGetHTable(appContext), valueString);
+    WriteMessage("Successful delete", "Green");
+    return SUCCESSFUL_CODE;
+}
+
+CodeStatus MenuShowProcess(ApplicationContext *appContext)
+{
+    if (appContext == NULL)
+        return UNSUCCESSFUL_CODE;
+    ClearConsole;
+    printf("-----Show-----\n");
+    if (HashTableCount(AppContextGetHTable(appContext)) > 0)
+        WriteHashTable(AppContextGetHTable(appContext));
+    else
+        printf("Empty...\n");
+    system("pause");
     return SUCCESSFUL_CODE;
 }
 
@@ -89,6 +117,10 @@ CodeStatus MenuProcess(const Menu *menu, ApplicationContext *appContext)
 {
     if (StringEqual(menu->name, "Add"))
         return MenuAddProcess(appContext);
+    if (StringEqual(menu->name, "Delete"))
+        return MenuDeleteProcess(appContext);
+    if (StringEqual(menu->name, "Show"))
+        return MenuShowProcess(appContext);
     while (1)
     {
         int value;
