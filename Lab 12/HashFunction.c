@@ -34,11 +34,11 @@ void swap(void *elemi, void *elemj, unsigned int size)
 
 unsigned int GetHashCode(const String *str)
 {
-    unsigned int hash1 = StringCount(str);
-    unsigned int hash2 = StringCount(str);
+    unsigned int hash1 = StringLength(str);
+    unsigned int hash2 = StringLength(str);
     unsigned char index;
 
-    for (unsigned int i = 0; i < StringCount(str); i++)
+    for (unsigned int i = 0; i < StringLength(str); i++)
     {
         index = (StringElem(str, i) + i) & 255;
 
@@ -50,23 +50,23 @@ unsigned int GetHashCode(const String *str)
     }
 
     hash1 = LROT(hash1 + ((hash1 << 6) ^ (hash1 >> 8)));
-    hash1 += seedTable[StringCount(str)];
+    hash1 += seedTable[StringLength(str)];
     hash2 = RROT(hash2 + ((hash2 << 6) ^ (hash2 >> 8)));
-    hash2 += seedTable[StringCount(str)];
+    hash2 += seedTable[StringLength(str)];
 
     return hash1 ^ hash2;
 }
 
-#define CONSTVALUE 1717
+#define CONST_VALUE 1717
 
 unsigned int GetHashCode1(const String *str)
 {
-    unsigned int hash = StringCount(str);
+    unsigned int hash = StringLength(str);
 
-    for (int i = 0; i < StringCount(str); i++)
+    for (int i = 0; i < StringLength(str); i++)
     {
         hash ^= seedTable[(StringElem(str, i) + i) & 255];
-        hash = hash * CONSTVALUE;
+        hash *= CONST_VALUE;
     }
 
     return hash;

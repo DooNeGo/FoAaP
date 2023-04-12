@@ -41,7 +41,7 @@ typedef struct Node Node;
 Node *NodeConstructor();
 CodeStatus NodeDelete(Node *node, const String *value);
 CodeStatus NodeSetValue(Node *node, String *value);
-String *NodeGetValue(Node *node);
+String *NodeGetValue(const Node *node);
 int NodeChildrenCount(const Node *node);
 Node *NodeChildren(const Node *node);
 Status NodeStatus(const Node *node);

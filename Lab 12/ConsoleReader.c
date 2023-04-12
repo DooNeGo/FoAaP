@@ -4,7 +4,7 @@
 typedef struct String
 {
     char *elems;
-    int count;
+    int length;
     int capacity;
 } String;
 
@@ -14,13 +14,13 @@ String *ReadString()
     String *str = StringConstructor(2);
     while (1)
     {
-        char temp;
+        char temp = 0;
         scanf("%c", &temp);
         if (temp == '\n' || temp == ' ' || temp == '\t')
             break;
         StringAddCharElem(str, temp);
     }
-    if (StringEqual(str, "0"))
+    if (StringEquals(str, "0"))
     {
         StringFree(str);
         return NULL;

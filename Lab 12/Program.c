@@ -17,6 +17,7 @@ Menu *InitializeMenu()
     Menu *addHashTableItem = MenuConstructor("Add");
     Menu *deleteHashTableItem = MenuConstructor("Delete");
     Menu *showHTable = MenuConstructor("Show");
+    Menu *checkHTableValue = MenuConstructor("Check");
 
     MenuAddChildren(mainMenu, hashTableMenu);
     MenuAddChildren(mainMenu, hashTableMenuStats);
@@ -24,37 +25,18 @@ Menu *InitializeMenu()
     MenuAddChildren(hashTableMenu, showHTable);
     MenuAddChildren(hashTableMenu, addHashTableItem);
     MenuAddChildren(hashTableMenu, deleteHashTableItem);
+    MenuAddChildren(hashTableMenu, checkHTableValue);
 
     return mainMenu;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char const *argv[])
 {
-    HashTable *hashTable = HashTableConstructor(20);
+    HashTable *hashTable = HashTableConstructor(6);
     ApplicationContext *appContext = AppContextConstructor();
-
-    AppContextSetHTable(appContext, hashTable);
-
-    /* printf("Input:\n");
-    for (int i = 0; i < 20; i++)
-    {
-        String *str = ReadString();
-        HashTableAdd(hashTable, str);
-        StringFree(str);
-    }
-
-    printf("\nOutput:\n");
-    for (int i = 0; i < GetHashTableCount(hashTable); i++)
-    {
-        WriteHashTableNode(HashTableNode(hashTable, i));
-    }
-    printf("\nMax collision: %d\n", GetMaxCountCollisions(hashTable));
-
-    WriteEachNodeCollision(hashTable);*/
-
-
     Menu *menu = InitializeMenu();
 
+    AppContextSetHTable(appContext, hashTable);
     MenuProcess(menu, appContext);
 
     HashTableFree(hashTable);

@@ -5,7 +5,7 @@
 typedef struct String
 {
     char *elems;
-    int count;
+    int length;
     int capacity;
 } String;
 
@@ -13,59 +13,61 @@ String *StringConstructor(unsigned int initialSize)
 {
     if (initialSize == 0)
         initialSize = 2;
-    String *arr = (String *)malloc(sizeof(String));
-    arr->count = 0;
-    arr->capacity = initialSize;
-    arr->elems = (char *)malloc(initialSize);
-    return arr;
+    String *str = (String *)malloc(sizeof(String));
+    str->length = 0;
+    str->capacity = initialSize;
+    str->elems = (char *)malloc(initialSize);
+    str->elems[0] = '\0';
+    return str;
 }
 
-void ResizeString(String *arr)
+void Resize(String *str)
 {
-    int newSize = arr->capacity * 2;
+    int newSize = str->capacity * 2;
     char *newArr = (char *)malloc(newSize);
-    memcpy(newArr, arr->elems, arr->count);
-    free(arr->elems);
-    arr->capacity = newSize;
-    arr->elems = newArr;
+    memcpy(newArr, str->elems, str->length);
+    free(str->elems);
+    str->capacity = newSize;
+    str->elems = newArr;
 }
 
-CodeStatus StringAddCharElem(String *arr, const char elem)
+CodeStatus StringAddCharElem(String *str, const char elem)
 {
     char newArrElem = elem;
-    if (arr->count == arr->capacity)
-        ResizeString(arr);
-    arr->elems[arr->count] = newArrElem;
-    arr->count++;
+    if (str->length + 1 == str->capacity)
+        Resize(str);
+    str->elems[str->length] = newArrElem;
+    str->elems[str->length + 1] = '\0';
+    str->length++;
     return SUCCESSFUL_CODE;
 }
 
 CodeStatus StringSetValue(String *str, const char *string)
 {
-    if (StringCount(str) > 0)
-        StringClear(str, 2);
-    int size = strlen(string);
-    for (int i = 0; i < size; i++)
-    {
+    if (string == NULL || str == NULL)
+        return UNSUCCESSFUL_CODE;
+    int length = strlen(string);
+    if (StringLength(str) > 0)
+        StringClear(str, length);
+    for (int i = 0; i < length; i++)
         StringAddCharElem(str, string[i]);
-    }
     return SUCCESSFUL_CODE;
 }
 
 char StringElem(const String *str, unsigned int index)
 {
-    if (index >= str->count)
+    if (index >= str->length || str == NULL)
         return NULL;
     return str->elems[index];
 }
 
-CodeStatus StringAdd(String *arr, const char *string)
+CodeStatus StringAdd(String *str, const char *string)
 {
-    int size = strlen(string);
-    for (int i = 0; i < size; i++)
-    {
-        StringAddCharElem(arr, string[i]);
-    }
+    int length = strlen(string);
+    if (length == 0)
+        return UNSUCCESSFUL_CODE;
+    for (int i = 0; i < length; i++)
+        StringAddCharElem(str, string[i]);
     return SUCCESSFUL_CODE;
 }
 
@@ -74,16 +76,16 @@ CodeStatus StringClear(String *str, int initialSize)
     free(str->elems);
     str->elems = (char *)malloc(sizeof(char) * initialSize);
     str->capacity = initialSize;
-    str->count = 0;
+    str->length = 0;
     return SUCCESSFUL_CODE;
 }
 
-char *StringGetValue(const String *arr)
+char *StringGetValue(const String *str)
 {
-    if (arr->count < 1)
+    if (str->length < 1)
         return NULL;
-    char *arrChar = (char *)malloc(arr->count);
-    memcpy(arrChar, arr->elems, arr->count);
+    char *arrChar = (char *)malloc(str->length + 1);
+    memcpy(arrChar, str->elems, str->length + 1);
     return arrChar;
 }
 
@@ -92,25 +94,30 @@ int StringSize()
     return sizeof(String);
 }
 
-int StringCount(const String *str)
+int StringLength(const String *str)
 {
-    return str->count;
+    return str->length;
 }
 
-Bool IsEqualStrings(const String *str, const String *str1)
+int StringCapacity(const String *str)
 {
-    if (str == NULL || str1 == NULL || str->count != str1->count)
+    return str->capacity;
+}
+
+Bool IsStringsEqual(const String *str, const String *str1)
+{
+    if (str == NULL || str1 == NULL || str->length != str1->length)
         return False;
-    if (memcmp(StringGetValue(str), StringGetValue(str1), StringCount(str)) == 0)
+    if (memcmp(StringGetValue(str), StringGetValue(str1), StringLength(str)) == 0)
         return True;
     return False;
 }
 
-Bool StringEqual(const String *str, const void *elem)
+Bool StringEquals(const String *str, const void *elem)
 {
     if (str == NULL || elem == NULL)
         return False;
-    if (memcmp(StringGetValue(str), elem, StringCount(str)) == 0)
+    if (memcmp(StringGetValue(str), elem, StringLength(str)) == 0)
         return True;
     return False;
 }

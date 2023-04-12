@@ -6,7 +6,6 @@ typedef struct Node
     String *value;
     Status status;
     Node *children;
-    unsigned int countChildren;
 } Node;
 
 Node *NodeConstructor()
@@ -15,7 +14,6 @@ Node *NodeConstructor()
     node->value = NULL;
     node->status = Deleted;
     node->children = NULL;
-    node->countChildren = 0;
     return node;
 }
 
@@ -23,14 +21,14 @@ Bool NodeCheckValue(const Node *node, const String *value)
 {
     if (node == NULL)
         return False;
-    if (IsEqualStrings(node->value, value) && node->status == Exist)
+    if (IsStringsEqual(NodeGetValue(node), value) && NodeStatus(node) == Exist)
         return True;
     return NodeCheckValue(node->children, value);
 }
 
 CodeStatus NodeSetValue(Node *node, String *value)
 {
-    if (node == NULL || value == NULL || IsEqualStrings(node->value, value))
+    if (node == NULL || value == NULL || IsStringsEqual(node->value, value) && NodeStatus(node) == Exist)
         return UNSUCCESSFUL_CODE;
     if (NodeStatus(node) == Deleted)
     {
@@ -41,11 +39,10 @@ CodeStatus NodeSetValue(Node *node, String *value)
     }
     if (node->children == NULL)
         node->children = NodeConstructor();
-    node->countChildren++;
     return NodeSetValue(node->children, value);
 }
 
-String *NodeGetValue(Node *node)
+String *NodeGetValue(const Node *node)
 {
     return node->value;
 }
@@ -72,7 +69,7 @@ CodeStatus NodeDelete(Node *node, const String *value)
 {
     if (node == NULL)
         return UNSUCCESSFUL_CODE;
-    if (IsEqualStrings(node->value, value))
+    if (IsStringsEqual(node->value, value))
         return NodeSetDeletedStatus(node);
     return NodeDelete(node->children, value);
 }
@@ -82,11 +79,20 @@ int NodeSize()
     return sizeof(Node);
 }
 
+int CountChildren(const Node *children)
+{
+    if (children == NULL)
+        return 0;
+    int counter = 1;
+    counter += CountChildren(NodeChildren(children));
+    return counter;
+}
+
 int NodeChildrenCount(const Node *node)
 {
     if (node == NULL)
-        return NULL;
-    return node->countChildren;
+        return 0;
+    return CountChildren(NodeChildren(node));
 }
 
 Node *NodeChildren(const Node *node)

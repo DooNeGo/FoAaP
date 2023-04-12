@@ -23,7 +23,7 @@ Array *ArrayConstructor(unsigned int initialSize, int elemSize)
     return arr;
 }
 
-void ResizeArr(Array *arr)
+void Resize(Array *arr)
 {
     int newSize = arr->capacity * 2;
     void **newArr = (void **)malloc(newSize * 8);
@@ -38,7 +38,7 @@ CodeStatus ArrayAdd(Array *arr, const void *elem)
     void *newArrElem = malloc(arr->elemSize);
     memcpy(newArrElem, elem, arr->elemSize);
     if (arr->count == arr->capacity)
-        ResizeArr(arr);
+        Resize(arr);
     arr->elems[arr->count] = newArrElem;
     arr->count++;
     return SUCCESSFUL_CODE;
@@ -47,7 +47,7 @@ CodeStatus ArrayAdd(Array *arr, const void *elem)
 CodeStatus ArrayAddPtr(Array *arr, void *newElem)
 {
     if (arr->count == arr->capacity)
-        ResizeArr(arr);
+        Resize(arr);
     arr->elems[arr->count] = newElem;
     arr->count++;
     return SUCCESSFUL_CODE;
