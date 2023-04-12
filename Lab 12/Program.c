@@ -41,6 +41,7 @@ int main(int argc, char const *argv[])
 
     HashTableFree(hashTable);
     MenuFree(menu);
+    free(appContext);
 
     system("pause");
     return SUCCESSFUL_CODE;

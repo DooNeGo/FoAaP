@@ -129,7 +129,7 @@ CodeStatus HashTableDeleteValue(HashTable *hashTable, const String *value)
     return UNSUCCESSFUL_CODE;
 }
 
-CodeStatus Resize(HashTable *hashTable)
+CodeStatus ResizeHTable(HashTable *hashTable)
 {
     if (hashTable == NULL)
         return UNSUCCESSFUL_CODE;
@@ -157,7 +157,7 @@ CodeStatus HashTableAddCopy(HashTable *hashTable, const String *value)
         hashTable->nodes[hash] = NodeConstructor();
     if (NodeChildrenCount(HashTableNode(hashTable, hash)) > 3)
     {
-        Resize(hashTable);
+        ResizeHTable(hashTable);
         hash = GetHashCode1(value) % HashTableCapacity(hashTable);
     }
     hashTable->count++;
@@ -175,7 +175,7 @@ CodeStatus HashTableAdd(HashTable *hashTable, String *value)
         hashTable->nodes[hash] = NodeConstructor();
     if (NodeChildrenCount(HashTableNode(hashTable, hash)) > 2)
     {
-        Resize(hashTable);
+        ResizeHTable(hashTable);
         hash = GetHashCode1(value) % HashTableCapacity(hashTable);
     }
     if (NodeSetValue(hashTable->nodes[hash], value) == SUCCESSFUL_CODE)

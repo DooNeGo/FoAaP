@@ -21,7 +21,7 @@ String *StringConstructor(unsigned int initialSize)
     return str;
 }
 
-void Resize(String *str)
+void ResizeStr(String *str)
 {
     int newSize = str->capacity * 2;
     char *newArr = (char *)malloc(newSize);
@@ -35,7 +35,7 @@ CodeStatus StringAddCharElem(String *str, const char elem)
 {
     char newArrElem = elem;
     if (str->length + 1 == str->capacity)
-        Resize(str);
+        ResizeStr(str);
     str->elems[str->length] = newArrElem;
     str->elems[str->length + 1] = '\0';
     str->length++;
@@ -57,7 +57,7 @@ CodeStatus StringSetValue(String *str, const char *string)
 char StringElem(const String *str, unsigned int index)
 {
     if (index >= str->length || str == NULL)
-        return NULL;
+        return 0;
     return str->elems[index];
 }
 

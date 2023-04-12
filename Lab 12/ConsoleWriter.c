@@ -79,7 +79,7 @@ CodeStatus WriteEachNodeCollisionWithStats(HashTable *hashTable)
         if (HashTableNode(hashTable, i) != NULL)
             printf("  %2d. %d\n", i + 1, NodeChildrenCount(HashTableNode(hashTable, i)) + 1);
         else
-            printf("  %2d. %d\n", i + 1, NULL);
+            printf("  %2d. %d\n", i + 1, 0);
         temp += NodeChildrenCount(HashTableNode(hashTable, i));
     }
 

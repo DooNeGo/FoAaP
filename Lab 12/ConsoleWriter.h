@@ -18,7 +18,7 @@ typedef enum Color
 CodeStatus WriteString(const String *str);
 CodeStatus WriteLineString(const String *str);
 CodeStatus WriteMessage(const char *message, Color color);
-CodeStatus WriteHashTableNode(Node *node);
+CodeStatus WriteHashTableNode(Node *node, int counter);
 CodeStatus WriteHashTable(const HashTable *hashTable);
 CodeStatus WriteEachNodeCollisionWithStats(HashTable *hashTable);
 

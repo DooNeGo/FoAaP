@@ -179,7 +179,7 @@ CodeStatus MenuProcess(const Menu *menu, ApplicationContext *appContext)
         WriteString(MenuName(menu));
         printf("-----\n");
         ShowChildren(menu);
-        scanf_s("%d", &value);
+        scanf("%d", &value);
         if (value == 0)
             return SUCCESSFUL_CODE;
         else if (value > 0 && value <= MenuChildrenCount(menu))
