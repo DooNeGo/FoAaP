@@ -1,4 +1,3 @@
-#include "String.h"
 #include "ApplicationContext.h"
 
 #ifndef MENU

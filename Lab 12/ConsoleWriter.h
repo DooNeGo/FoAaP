@@ -1,4 +1,3 @@
-#include "String.h"
 #include "HashTable.h"
 
 #ifndef COLOR

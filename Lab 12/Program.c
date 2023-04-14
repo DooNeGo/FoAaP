@@ -2,10 +2,6 @@
 #include <stdlib.h>
 #include "HashTable.h"
 #include "Menu.h"
-#include "ApplicationContext.h"
-#include "String.h"
-#include "ConsoleReader.h"
-#include "ConsoleWriter.h"
 
 Menu *InitializeMenu()
 {
@@ -30,7 +26,7 @@ Menu *InitializeMenu()
     return mainMenu;
 }
 
-int main(int argc, char const *argv[])
+int main(int argc, const char **argv)
 {
     HashTable *hashTable = HashTableConstructor(6);
     ApplicationContext *appContext = AppContextConstructor();
