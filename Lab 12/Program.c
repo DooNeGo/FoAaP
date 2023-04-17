@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "HashTable.h"
 #include "Menu.h"
 
@@ -29,16 +27,14 @@ Menu *InitializeMenu()
 int main(int argc, const char **argv)
 {
     HashTable *hashTable = HashTableConstructor(6);
-    ApplicationContext *appContext = AppContextConstructor();
+    ApplicationContext *appContext = AppContextConstructor(hashTable);
     Menu *menu = InitializeMenu();
 
-    AppContextSetHTable(appContext, hashTable);
     MenuProcess(menu, appContext);
 
     HashTableFree(hashTable);
     MenuFree(menu);
-    free(appContext);
+    AppContextFree(appContext);
 
-    system("pause");
     return SUCCESSFUL_CODE;
 }

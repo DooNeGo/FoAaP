@@ -29,9 +29,9 @@ CodeStatus WriteMessage(const char *message, Color color)
 {
     ConsoleClear;
     fflush(stdin);
-    if (color == Red)
+    if (color == RED)
         ConsoleColorRed;
-    else if (color == Green)
+    else if (color == GREEN)
         ConsoleColorGreen;
     printf("-----Message-----");
     printf("\n%s\n", message);
@@ -40,17 +40,27 @@ CodeStatus WriteMessage(const char *message, Color color)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus WriteHashTableNode(Node *node, int counter)
+int WriteNode(Node *children, int counter)
 {
-    if (node == NULL)
-        return UNSUCCESSFUL_CODE;
-    int countChildren = NodeChildrenCount(node);
-    printf("%d. ", counter);
-    for (int i = 0; i <= countChildren; i++)
+    if (children == NULL)
+        return counter;
+    if (NodeStatus(children) == EXIST)
     {
-        if (NodeStatus(node) == Exist)
-            WriteLineString(NodeGetValue(node));
-        node = NodeChildren(node);
+        printf("%2d. ", counter);
+        WriteLineString(NodeGetValue(children));
+        counter++;
+    }
+    return WriteNode(NodeChildren(children), counter);
+}
+
+CodeStatus WriteArray(Array *arr)
+{
+    if (arr == NULL)
+        return UNSUCCESSFUL_CODE;
+    for (int i = 0; i < ArrayCount(arr); i++)
+    {
+        printf_s("%2d. ", i + 1);
+        WriteLineString((String *)ArrayGetElem(arr, i));
     }
     return SUCCESSFUL_CODE;
 }
@@ -59,14 +69,13 @@ CodeStatus WriteHashTable(const HashTable *hashTable)
 {
     if (hashTable == NULL)
         return UNSUCCESSFUL_CODE;
-    int counter = 0;
+    int counter = 1;
     for (int i = 0; i < HashTableCapacity(hashTable); i++)
     {
         Node *node = HashTableNode(hashTable, i);
         if (node == NULL)
             continue;
-        counter++;
-        WriteHashTableNode(node, counter);
+        counter = WriteNode(node, counter);
     }
     return SUCCESSFUL_CODE;
 }

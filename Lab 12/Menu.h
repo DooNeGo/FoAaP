@@ -1,5 +1,17 @@
 #include "ApplicationContext.h"
 
+#ifndef CODE_STATUS
+#define CODE_STATUS
+
+typedef enum CodeStatus
+{
+    SUCCESSFUL_CODE = 0,
+    UNSUCCESSFUL_CODE = 1,
+    ArgumentOutOfRangeException = 2,
+} CodeStatus;
+
+#endif
+
 #ifndef MENU
 #define MENU
 

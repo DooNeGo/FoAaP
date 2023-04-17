@@ -1,5 +1,28 @@
 #include "Node.h"
 
+#ifndef CODE_STATUS
+#define CODE_STATUS
+
+typedef enum CodeStatus
+{
+    SUCCESSFUL_CODE = 0,
+    UNSUCCESSFUL_CODE = 1,
+    ArgumentOutOfRangeException = 2,
+} CodeStatus;
+
+#endif
+
+#ifndef BOOL
+#define BOOL
+
+typedef enum Bool
+{
+    FALSE = 0,
+    TRUE = 1,
+} Bool;
+
+#endif
+
 #ifndef HASH_TABLE
 #define HASH_TABLE
 

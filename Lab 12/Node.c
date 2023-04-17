@@ -12,7 +12,7 @@ Node *NodeConstructor()
 {
     Node *node = (Node *)malloc(sizeof(Node));
     node->value = NULL;
-    node->status = Deleted;
+    node->status = DELETED;
     node->children = NULL;
     return node;
 }
@@ -20,21 +20,21 @@ Node *NodeConstructor()
 Bool NodeCheckValue(const Node *node, const String *value)
 {
     if (node == NULL)
-        return False;
-    if (IsStringsEqual(NodeGetValue(node), value) && NodeStatus(node) == Exist)
-        return True;
+        return FALSE;
+    if (IsStringsEqual(NodeGetValue(node), value) && NodeStatus(node) == EXIST)
+        return TRUE;
     return NodeCheckValue(node->children, value);
 }
 
 CodeStatus NodeSetValue(Node *node, String *value)
 {
-    if (node == NULL || value == NULL || IsStringsEqual(node->value, value) && NodeStatus(node) == Exist)
+    if (node == NULL || value == NULL || IsStringsEqual(node->value, value) && NodeStatus(node) == EXIST)
         return UNSUCCESSFUL_CODE;
-    if (NodeStatus(node) == Deleted)
+    if (NodeStatus(node) == DELETED)
     {
         StringFree(node->value);
         node->value = value;
-        node->status = Exist;
+        node->status = EXIST;
         return SUCCESSFUL_CODE;
     }
     if (node->children == NULL)
@@ -61,7 +61,7 @@ CodeStatus NodeSetDeletedStatus(Node *node)
 {
     if (node == NULL)
         return UNSUCCESSFUL_CODE;
-    node->status = Deleted;
+    node->status = DELETED;
     return SUCCESSFUL_CODE;
 }
 

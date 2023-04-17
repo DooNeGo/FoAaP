@@ -107,19 +107,19 @@ int StringCapacity(const String *str)
 Bool IsStringsEqual(const String *str, const String *str1)
 {
     if (str == NULL || str1 == NULL || str->length != str1->length)
-        return False;
+        return FALSE;
     if (memcmp(StringGetValue(str), StringGetValue(str1), StringLength(str)) == 0)
-        return True;
-    return False;
+        return TRUE;
+    return FALSE;
 }
 
 Bool StringEquals(const String *str, const void *elem)
 {
     if (str == NULL || elem == NULL)
-        return False;
+        return FALSE;
     if (memcmp(StringGetValue(str), elem, StringLength(str)) == 0)
-        return True;
-    return False;
+        return TRUE;
+    return FALSE;
 }
 
 CodeStatus StringFree(String *str)

@@ -67,7 +67,7 @@ CodeStatus InsertOldNodesToHashTable(HashTable *hashTable, Node *node)
     int childrenCount = NodeChildrenCount(node);
     for (int j = 0; j <= childrenCount; j++)
     {
-        if (NodeStatus(node) == Exist)
+        if (NodeStatus(node) == EXIST)
             HashTableAddCopy(hashTable, NodeGetValue(node));
         node = NodeChildren(node);
     }
@@ -85,7 +85,7 @@ int UpdateCountDeletedNodes(HashTable *hashTable)
         int countChildren = NodeChildrenCount(node);
         for (int i = 0; i <= countChildren; i++)
         {
-            if (NodeStatus(node) == Deleted)
+            if (NodeStatus(node) == DELETED)
                 counter++;
             node = NodeChildren(node);
         }

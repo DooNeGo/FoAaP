@@ -15,8 +15,8 @@ typedef enum CodeStatus
 
 typedef enum Bool
 {
-    False = 0,
-    True = 1,
+    FALSE = 0,
+    TRUE = 1,
 } Bool;
 
 #endif

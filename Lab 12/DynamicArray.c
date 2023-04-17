@@ -78,7 +78,7 @@ CodeStatus ArraySetElem(Array *arr, const void *elem, unsigned int index)
     return SUCCESSFUL_CODE;
 }
 
-int ArrayGetCount(const Array *arr)
+int ArrayCount(const Array *arr)
 {
     return arr->count;
 }

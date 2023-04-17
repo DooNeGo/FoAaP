@@ -18,7 +18,7 @@ Array *ArrayConstructor(unsigned int initialSize, int elemSize);
 CodeStatus ArrayAdd(Array *arr, const void *elem);
 CodeStatus ArrayAddPtr(Array *arr, void *newElem);
 void *ArrayGetElem(Array *arr, unsigned int index);
-int ArrayGetCount(const Array *arr);
+int ArrayCount(const Array *arr);
 int ArrayGetCapacity(const Array *arr);
 CodeStatus ArraySetPtrElem(Array *arr, void *newElem, unsigned int index);
 CodeStatus ArrayRemoveElemAt(Array *arr, unsigned int index);

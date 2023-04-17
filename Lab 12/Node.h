@@ -5,8 +5,8 @@
 
 typedef enum Status
 {
-    Deleted = 0,
-    Exist = 1
+    DELETED = 0,
+    EXIST = 1
 } Status;
 
 #endif
@@ -16,8 +16,8 @@ typedef enum Status
 
 typedef enum Bool
 {
-    False = 0,
-    True = 1,
+    FALSE = 0,
+    TRUE = 1,
 } Bool;
 
 #endif
