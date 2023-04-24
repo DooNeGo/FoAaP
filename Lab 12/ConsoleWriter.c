@@ -93,7 +93,7 @@ CodeStatus WriteEachNodeCollisionWithStats(HashTable *hashTable)
     }
 
     printf("\nAverage collisions: %.2f", (double)temp / (double)GetTableFilledCount(hashTable));
-    printf("\nFill: %.2f\n", (double)GetTableFilledCount(hashTable) / (double)HashTableCapacity(hashTable));
+    printf("\nFill: %.2f%%\n", ((double)GetTableFilledCount(hashTable) / (double)HashTableCapacity(hashTable)) * 100);
     printf("Number of deleted items: %d\n", HashTableCountDeletedNodes(hashTable));
     printf("Number of exist items: %d\n", HashTableCount(hashTable));
 

@@ -9,7 +9,6 @@ typedef enum CodeStatus
 {
     SUCCESSFUL_CODE = 0,
     UNSUCCESSFUL_CODE = 1,
-    ArgumentOutOfRangeException = 2,
 } CodeStatus;
 
 #endif

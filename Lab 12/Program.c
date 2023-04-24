@@ -24,7 +24,7 @@ Menu *InitializeMenu()
     return mainMenu;
 }
 
-int main(int argc, const char **argv)
+int main()
 {
     HashTable *hashTable = HashTableConstructor(6);
     ApplicationContext *appContext = AppContextConstructor(hashTable);

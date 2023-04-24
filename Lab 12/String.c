@@ -5,8 +5,8 @@
 typedef struct String
 {
     char *elems;
-    int length;
-    int capacity;
+    unsigned int length;
+    unsigned int capacity;
 } String;
 
 String *StringConstructor(unsigned int initialSize)
@@ -71,7 +71,7 @@ CodeStatus StringAdd(String *str, const char *string)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus StringClear(String *str, int initialSize)
+CodeStatus StringClear(String *str, unsigned int initialSize)
 {
     free(str->elems);
     str->elems = (char *)malloc(sizeof(char) * initialSize);

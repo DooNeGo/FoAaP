@@ -5,7 +5,6 @@ typedef enum CodeStatus
 {
     SUCCESSFUL_CODE = 0,
     UNSUCCESSFUL_CODE = 1,
-    ArgumentOutOfRangeException = 2,
 } CodeStatus;
 
 #endif
@@ -28,7 +27,7 @@ typedef struct String String;
 String *StringConstructor(unsigned int initialSize);
 CodeStatus StringAdd(String *str, const char *string);
 CodeStatus StringAddCharElem(String *str, const char elem);
-CodeStatus StringClear(String *str, int initialSize);
+CodeStatus StringClear(String *str, unsigned int initialSize);
 char *StringGetValue(const String *str);
 CodeStatus StringSetValue(String *str, const char *string);
 int StringSize();

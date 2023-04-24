@@ -28,7 +28,7 @@ Bool NodeCheckValue(const Node *node, const String *value)
 
 CodeStatus NodeSetValue(Node *node, String *value)
 {
-    if (node == NULL || value == NULL || IsStringsEqual(node->value, value) && NodeStatus(node) == EXIST)
+    if (node == NULL || value == NULL || IsStringsEqual(NodeGetValue(node), value) && NodeStatus(node) == EXIST)
         return UNSUCCESSFUL_CODE;
     if (NodeStatus(node) == DELETED)
     {
@@ -39,7 +39,7 @@ CodeStatus NodeSetValue(Node *node, String *value)
     }
     if (node->children == NULL)
         node->children = NodeConstructor();
-    return NodeSetValue(node->children, value);
+    return NodeSetValue(NodeChildren(node), value);
 }
 
 String *NodeGetValue(const Node *node)
@@ -69,7 +69,7 @@ CodeStatus NodeDelete(Node *node, const String *value)
 {
     if (node == NULL)
         return UNSUCCESSFUL_CODE;
-    if (IsStringsEqual(node->value, value))
+    if (IsStringsEqual(NodeGetValue(node), value))
         return NodeSetDeletedStatus(node);
     return NodeDelete(node->children, value);
 }

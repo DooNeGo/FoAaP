@@ -6,15 +6,15 @@
 typedef struct Array
 {
     void **elems;
-    int count;
-    int capacity;
-    int elemSize;
+    unsigned int count;
+    unsigned int capacity;
+    unsigned int elemSize;
 } Array;
 
-Array *ArrayConstructor(unsigned int initialSize, int elemSize)
+Array *ArrayConstructor(unsigned int initialSize, unsigned int elemSize)
 {
     if (initialSize == 0)
-        initialSize = 1;
+        initialSize = 2;
     Array *arr = (Array *)malloc(sizeof(Array));
     arr->count = 0;
     arr->capacity = initialSize;
@@ -83,15 +83,15 @@ int ArrayCount(const Array *arr)
     return arr->count;
 }
 
-int ArrayGetCapacity(const Array *arr)
+int ArrayCapacity(const Array *arr)
 {
     return arr->capacity;
 }
 
 CodeStatus ArrayRemoveElemAt(Array *arr, unsigned int index)
 {
-    if (index >= arr->count)
-        return ArgumentOutOfRangeException;
+    if (index >= arr->count || arr == NULL)
+        return UNSUCCESSFUL_CODE;
     for (int i = index; i < arr->count - 1; i++)
     {
         arr->elems[i] = arr->elems[i + 1];
@@ -114,10 +114,12 @@ CodeStatus ArrayRemoveElem(Array *arr, const void *elem)
 
 CodeStatus ArrayClear(Array *arr)
 {
+    if (arr == NULL)
+        return UNSUCCESSFUL_CODE;
     for (int i = 0; i < arr->count; i++)
         free(arr->elems[i]);
     free(arr->elems);
-    arr->elems = (void **)malloc(arr->elemSize * 2);
+    arr->elems = (void **)malloc(8 * 2);
     arr->capacity = 2;
     arr->count = 0;
     return SUCCESSFUL_CODE;

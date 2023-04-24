@@ -2,7 +2,6 @@
 #include <string.h>
 #include "HashTable.h"
 #include "HashFunction.h"
-#include <stdarg.h>
 
 typedef struct HashTable
 {
@@ -14,6 +13,8 @@ typedef struct HashTable
 
 CodeStatus InitializeHashTableNodes(HashTable *hashTable)
 {
+    if (hashTable == NULL)
+        return UNSUCCESSFUL_CODE;
     for (int i = 0; i < hashTable->capacity; i++)
         hashTable->nodes[i] = NULL;
     return SUCCESSFUL_CODE;
@@ -22,7 +23,7 @@ CodeStatus InitializeHashTableNodes(HashTable *hashTable)
 HashTable *HashTableConstructor(unsigned int initialSize)
 {
     if (initialSize == 0)
-        initialSize = 1;
+        initialSize = 2;
     HashTable *hashTable = (HashTable *)malloc(sizeof(HashTable));
     hashTable->nodes = (Node **)malloc(initialSize * 8);
     hashTable->capacity = initialSize;
