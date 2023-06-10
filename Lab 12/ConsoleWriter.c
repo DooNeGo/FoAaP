@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "ConsoleWriter.h"
 
-#define ConsoleColorRed system("color 4")
-#define ConsoleColorGreen system("color A")
+#define ConsoleSetColorRed system("color 4")
+#define ConsoleSetColorGreen system("color A")
 #define ConsoleClear system("cls")
 
 CodeStatus WriteString(const String *str)
@@ -30,9 +30,9 @@ CodeStatus WriteMessage(const char *message, Color color)
     ConsoleClear;
     fflush(stdin);
     if (color == RED)
-        ConsoleColorRed;
+        ConsoleSetColorRed;
     else if (color == GREEN)
-        ConsoleColorGreen;
+        ConsoleSetColorGreen;
     printf("-----Message-----");
     printf("\n%s\n", message);
     system("pause");

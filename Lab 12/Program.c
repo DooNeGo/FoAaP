@@ -6,12 +6,12 @@ Menu *InitializeMenu()
     Menu *mainMenu = MenuConstructor("HTable menu");
 
     Menu *hashTableMenu = MenuConstructor("Interaction");
-    Menu *hashTableMenuStats = MenuConstructor("Stats");
+    Menu *hashTableMenuStats = MenuConstructor2("Stats", MenuStats);
 
-    Menu *addHashTableItem = MenuConstructor("Add");
-    Menu *deleteHashTableItem = MenuConstructor("Delete");
-    Menu *showHTable = MenuConstructor("Show");
-    Menu *checkHTableValue = MenuConstructor("Check");
+    Menu *addHashTableItem = MenuConstructor2("Add", MenuAdd);
+    Menu *deleteHashTableItem = MenuConstructor2("Delete", MenuDelete);
+    Menu *showHTable = MenuConstructor2("Show", MenuShow);
+    Menu *checkHTableValue = MenuConstructor2("Check", MenuCheck);
 
     MenuAddChildren(mainMenu, hashTableMenu);
     MenuAddChildren(mainMenu, hashTableMenuStats);

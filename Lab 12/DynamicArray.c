@@ -33,7 +33,7 @@ void ResizeArr(Array *arr)
     arr->elems = newArr;
 }
 
-CodeStatus ArrayAdd(Array *arr, const void *elem)
+CodeStatus ArrayAddCopy(Array *arr, const void *elem)
 {
     void *newArrElem = malloc(arr->elemSize);
     memcpy(newArrElem, elem, arr->elemSize);
@@ -44,7 +44,7 @@ CodeStatus ArrayAdd(Array *arr, const void *elem)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus ArrayAddPtr(Array *arr, void *newElem)
+CodeStatus ArrayAdd(Array *arr, void *newElem)
 {
     if (arr->count == arr->capacity)
         ResizeArr(arr);
@@ -60,7 +60,7 @@ void *ArrayGetElem(Array *arr, unsigned int index)
     return arr->elems[index];
 }
 
-CodeStatus ArraySetPtrElem(Array *arr, void *newElem, unsigned int index)
+CodeStatus ArraySetElem(Array *arr, void *newElem, unsigned int index)
 {
     if (index >= arr->count)
         return UNSUCCESSFUL_CODE;
@@ -68,12 +68,12 @@ CodeStatus ArraySetPtrElem(Array *arr, void *newElem, unsigned int index)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus ArraySetElem(Array *arr, const void *elem, unsigned int index)
+CodeStatus ArraySetElemCopy(Array *arr, const void *elem, unsigned int index)
 {
-    void *newElem = malloc(arr->elemSize);
-    memcpy(newElem, elem, arr->elemSize);
     if (index >= arr->count)
         return UNSUCCESSFUL_CODE;
+    void *newElem = malloc(arr->elemSize);
+    memcpy(newElem, elem, arr->elemSize);
     arr->elems[index] = newElem;
     return SUCCESSFUL_CODE;
 }

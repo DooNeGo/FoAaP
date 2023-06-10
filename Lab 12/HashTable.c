@@ -187,6 +187,15 @@ CodeStatus HashTableAdd(HashTable *hashTable, String *value)
     return UNSUCCESSFUL_CODE;
 }
 
+CodeStatus HashTableFree(HashTable *hashTable)
+{
+    for (int i = 0; i < HashTableCapacity(hashTable); i++)
+        NodeFree(hashTable->nodes[i]);
+    free(hashTable);
+    return SUCCESSFUL_CODE;
+}
+
+
 int GetMaxCountCollisions(const HashTable *hashTable)
 {
     int maxCountCollisions = 0;
@@ -197,14 +206,6 @@ int GetMaxCountCollisions(const HashTable *hashTable)
             maxCountCollisions = NodeChildrenCount(node);
     }
     return maxCountCollisions;
-}
-
-CodeStatus HashTableFree(HashTable *hashTable)
-{
-    for (int i = 0; i < HashTableCapacity(hashTable); i++)
-        NodeFree(hashTable->nodes[i]);
-    free(hashTable);
-    return SUCCESSFUL_CODE;
 }
 
 int GetTableFilledCount(HashTable *hashTable)

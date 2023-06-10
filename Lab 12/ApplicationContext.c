@@ -67,7 +67,7 @@ void InsertNodeValueToArray(Node *node, Array *arr)
     if (node == NULL || arr == NULL)
         return;
     if (NodeStatus(node) == EXIST)
-        ArrayAdd(arr, NodeGetValue(node));
+        ArrayAddCopy(arr, NodeGetValue(node));
     InsertNodeValueToArray(NodeChildren(node), arr);
 }
 

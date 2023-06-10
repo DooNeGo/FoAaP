@@ -11,6 +11,7 @@
 typedef struct Menu
 {
     String *name;
+    CodeStatus (*action)(const Menu *, ApplicationContext *);
     Array *children;
 } Menu;
 
@@ -20,6 +21,17 @@ Menu *MenuConstructor(const char *name)
     menu->name = StringConstructor(2);
     StringSetValue(menu->name, name);
     menu->children = NULL;
+    menu->action = MenuDefaultProcess;
+    return menu;
+}
+
+Menu *MenuConstructor2(const char *name, CodeStatus (*action)(const Menu *menu, ApplicationContext *appContext))
+{
+    Menu *menu = (Menu *)malloc(sizeof(Menu));
+    menu->name = StringConstructor(2);
+    StringSetValue(menu->name, name);
+    menu->children = NULL;
+    menu->action = action;
     return menu;
 }
 
@@ -29,7 +41,7 @@ CodeStatus MenuAddChildren(Menu *parent, Menu *children)
         return UNSUCCESSFUL_CODE;
     if (parent->children == NULL)
         parent->children = ArrayConstructor(1, sizeof(Menu));
-    ArrayAddPtr(parent->children, children);
+    ArrayAdd(parent->children, children);
     return SUCCESSFUL_CODE;
 }
 
@@ -62,31 +74,21 @@ CodeStatus MenuFree(Menu *menu)
     return ArrayFree(menu->children);
 }
 
-CodeStatus MenuAddProcess(ApplicationContext *appContext)
+CodeStatus MenuAdd(const Menu *menu, ApplicationContext *appContext)
 {
-    if (appContext == NULL)
-        return UNSUCCESSFUL_CODE;
-    while (1)
-    {
-        ClearConsole;
-        printf("-----Add-----\n");
-        printf("Enter value (0 - Return): ");
-        String *newValue = ReadString();
-        if (newValue == NULL)
-            return SUCCESSFUL_CODE;
-        if (HashTableAdd(AppContextHashTable(appContext), newValue) == SUCCESSFUL_CODE)
-            WriteMessage("Successful add", GREEN);
-        else
-            WriteMessage("Unsuccessful add", RED);
-    }
+    printf("Enter value (0 - Return): ");
+    String *newValue = ReadString();
+    if (newValue == NULL)
+        return SUCCESSFUL_CODE;
+    if (HashTableAdd(AppContextHashTable(appContext), newValue) == SUCCESSFUL_CODE)
+        WriteMessage("Successful add", GREEN);
+    else
+        WriteMessage("Unsuccessful add", RED);
+    return UNSUCCESSFUL_CODE;
 }
 
-CodeStatus MenuShowProcess(ApplicationContext *appContext)
+CodeStatus MenuShow(const Menu *menu, ApplicationContext *appContext)
 {
-    if (appContext == NULL)
-        return UNSUCCESSFUL_CODE;
-    ClearConsole;
-    printf("-----Show-----\n");
     if (HashTableCount(AppContextHashTable(appContext)) > 0)
         WriteHashTable(AppContextHashTable(appContext));
     else
@@ -95,56 +97,39 @@ CodeStatus MenuShowProcess(ApplicationContext *appContext)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus MenuDeleteProcess(ApplicationContext *appContext)
+CodeStatus MenuDelete(const Menu *menu, ApplicationContext *appContext)
 {
-    if (appContext == NULL)
-        return UNSUCCESSFUL_CODE;
-
-    while (1)
-    {
-        ClearConsole;
-        printf("-----Delete-----\n");
-        printf("Enter value (0 - Return): ");
-        String *valueString = ReadString();
-        if (valueString == NULL)
-            return SUCCESSFUL_CODE;
-        if (HashTableDeleteValue(AppContextHashTable(appContext), valueString) == SUCCESSFUL_CODE)
-            WriteMessage("Successful delete", GREEN);
-        else
-            WriteMessage("Unsuccessful delete", RED);
-        StringFree(valueString);
-    }
+    printf("Enter value (0 - Return): ");
+    String *valueString = ReadString();
+    if (valueString == NULL)
+        return SUCCESSFUL_CODE;
+    if (HashTableDeleteValue(AppContextHashTable(appContext), valueString) == SUCCESSFUL_CODE)
+        WriteMessage("Successful delete", GREEN);
+    else
+        WriteMessage("Unsuccessful delete", RED);
+    StringFree(valueString);
+    return UNSUCCESSFUL_CODE;
 }
 
-CodeStatus MenuStatsProcess(ApplicationContext *appContext)
+CodeStatus MenuStats(const Menu *menu, ApplicationContext *appContext)
 {
-    if (appContext == NULL)
-        return UNSUCCESSFUL_CODE;
-    ClearConsole;
-    printf("-----Stats-----");
-    printf("\nMax collision: %d\n", GetMaxCountCollisions(AppContextHashTable(appContext)));
+    printf("Max collision: %d\n", GetMaxCountCollisions(AppContextHashTable(appContext)));
     WriteEachNodeCollisionWithStats(AppContextHashTable(appContext));
     system("pause");
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus MenuCheckProcess(ApplicationContext *appContext)
+CodeStatus MenuCheck(const Menu *menu, ApplicationContext *appContext)
 {
-    if (appContext == NULL)
-        return UNSUCCESSFUL_CODE;
-    while (1)
-    {
-        ClearConsole;
-        printf("-----Check-----\n");
-        printf("Enter value (0 - Return): ");
-        String *valueString = ReadString();
-        if (valueString == NULL)
-            return SUCCESSFUL_CODE;
-        if (HashTableFindValue(AppContextHashTable(appContext), valueString))
-            WriteMessage("Such an element exists", GREEN);
-        else
-            WriteMessage("No such element exists", RED);
-    }
+    printf("Enter value (0 - Return): ");
+    String *valueString = ReadString();
+    if (valueString == NULL)
+        return SUCCESSFUL_CODE;
+    if (HashTableFindValue(AppContextHashTable(appContext), valueString))
+        WriteMessage("Such an element exists", GREEN);
+    else
+        WriteMessage("No such element exists", RED);
+    return UNSUCCESSFUL_CODE;
 }
 
 void ShowChildren(const Menu *menu)
@@ -158,34 +143,32 @@ void ShowChildren(const Menu *menu)
     printf("0 - Return\n");
 }
 
+CodeStatus MenuDefaultProcess(const Menu *menu, ApplicationContext *appContext)
+{
+    int value = 100;
+    ShowChildren(menu);
+    fflush(stdin);
+    scanf("%d", &value);
+    if (value == 0)
+        return SUCCESSFUL_CODE;
+    else if (value > 0 && value <= MenuChildrenCount(menu))
+        MenuProcess(MenuChildren(menu, value - 1), appContext);
+    else
+        WriteMessage("Wrong value", RED);
+    return UNSUCCESSFUL_CODE;
+}
+
 CodeStatus MenuProcess(const Menu *menu, ApplicationContext *appContext)
 {
-    if (StringEquals(MenuName(menu), "Add"))
-        return MenuAddProcess(appContext);
-    if (StringEquals(MenuName(menu), "Delete"))
-        return MenuDeleteProcess(appContext);
-    if (StringEquals(MenuName(menu), "Show"))
-        return MenuShowProcess(appContext);
-    if (StringEquals(MenuName(menu), "Stats"))
-        return MenuStatsProcess(appContext);
-    if (StringEquals(MenuName(menu), "Check"))
-        return MenuCheckProcess(appContext);
-
+    if (menu == NULL || appContext == NULL)
+        return UNSUCCESSFUL_CODE;
     while (1)
     {
-        int value = 100;
         ClearConsole;
-        fflush(stdin);
         printf("-----");
         WriteString(MenuName(menu));
         printf("-----\n");
-        ShowChildren(menu);
-        scanf("%d", &value);
-        if (value == 0)
+        if (menu->action(menu, appContext) == SUCCESSFUL_CODE)
             return SUCCESSFUL_CODE;
-        else if (value > 0 && value <= MenuChildrenCount(menu))
-            MenuProcess(MenuChildren(menu, value - 1), appContext);
-        else
-            WriteMessage("Wrong value", RED);
     }
 }
