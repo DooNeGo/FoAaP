@@ -61,18 +61,28 @@ Bool HashTableFindValue(const HashTable *hashTable, const String *value)
     return NodeCheckValue(HashTableNode(hashTable, hash), value);
 }
 
-CodeStatus InsertOldNodesToHashTable(HashTable *hashTable, Node *node)
+CodeStatus InsertNodeToHashTable(HashTable *hashTable, Node *node)
 {
     if (node == NULL)
         return UNSUCCESSFUL_CODE;
     int childrenCount = NodeChildrenCount(node);
-    for (int j = 0; j <= childrenCount; j++)
+    while (1)
     {
-        if (NodeStatus(node) == EXIST)
+        if (node != NULL && NodeStatus(node) == EXIST)
             HashTableAddCopy(hashTable, NodeGetValue(node));
+        else if (node == NULL)
+            return SUCCESSFUL_CODE;
         node = NodeChildren(node);
     }
-    return SUCCESSFUL_CODE;
+}
+
+void InsertNodesToHashTable(HashTable *newHTable, HashTable *oldHTable)
+{
+    for (int i = 0; i < HashTableCapacity(oldHTable); i++)
+    {
+        InsertNodeToHashTable(newHTable, HashTableNode(oldHTable, i));
+        NodeFree(oldHTable->nodes[i]);
+    }
 }
 
 int UpdateCountDeletedNodes(HashTable *hashTable)
@@ -102,11 +112,7 @@ CodeStatus Rehash(HashTable *hashTable)
     if ((double)HashTableCountDeletedNodes(hashTable) / (double)HashTableCapacity(hashTable) < 0.5)
         return UNSUCCESSFUL_CODE;
     HashTable *newHashTable = HashTableConstructor(HashTableCapacity(hashTable));
-    for (int i = 0; i < HashTableCapacity(hashTable); i++)
-    {
-        InsertOldNodesToHashTable(newHashTable, HashTableNode(hashTable, i));
-        NodeFree(hashTable->nodes[i]);
-    }
+    InsertNodesToHashTable(newHashTable, hashTable);
     free(hashTable->nodes);
     hashTable->nodes = newHashTable->nodes;
     hashTable->countDeletedNodes = 0;
@@ -130,7 +136,7 @@ CodeStatus HashTableDeleteValue(HashTable *hashTable, const String *value)
     return UNSUCCESSFUL_CODE;
 }
 
-CodeStatus ResizeHTable(HashTable *hashTable)
+CodeStatus Resize(HashTable *hashTable)
 {
     if (hashTable == NULL)
         return UNSUCCESSFUL_CODE;
@@ -138,7 +144,7 @@ CodeStatus ResizeHTable(HashTable *hashTable)
     HashTable *newHashTable = HashTableConstructor(newHashTableSize);
     for (int i = 0; i < HashTableCapacity(hashTable); i++)
     {
-        InsertOldNodesToHashTable(newHashTable, HashTableNode(hashTable, i));
+        InsertNodeToHashTable(newHashTable, HashTableNode(hashTable, i));
         NodeFree(hashTable->nodes[i]);
     }
     free(hashTable->nodes);
@@ -158,7 +164,7 @@ CodeStatus HashTableAddCopy(HashTable *hashTable, const String *value)
         hashTable->nodes[hash] = NodeConstructor();
     if (NodeChildrenCount(HashTableNode(hashTable, hash)) > 3)
     {
-        ResizeHTable(hashTable);
+        Resize(hashTable);
         hash = GetHashCode1(value) % HashTableCapacity(hashTable);
     }
     hashTable->count++;
@@ -176,7 +182,7 @@ CodeStatus HashTableAdd(HashTable *hashTable, String *value)
         hashTable->nodes[hash] = NodeConstructor();
     if (NodeChildrenCount(HashTableNode(hashTable, hash)) > 2)
     {
-        ResizeHTable(hashTable);
+        Resize(hashTable);
         hash = GetHashCode1(value) % HashTableCapacity(hashTable);
     }
     if (NodeSetValue(hashTable->nodes[hash], value) == SUCCESSFUL_CODE)

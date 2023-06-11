@@ -21,7 +21,7 @@ Menu *MenuConstructor(const char *name)
     menu->name = StringConstructor(2);
     StringSetValue(menu->name, name);
     menu->children = NULL;
-    menu->action = MenuDefaultProcess;
+    menu->action = MenuDefaultAction;
     return menu;
 }
 
@@ -35,7 +35,7 @@ Menu *MenuConstructor2(const char *name, CodeStatus (*action)(const Menu *menu, 
     return menu;
 }
 
-CodeStatus MenuAddChildren(Menu *parent, Menu *children)
+CodeStatus MenuAddChild(Menu *parent, Menu *children)
 {
     if (parent == NULL || children == NULL)
         return UNSUCCESSFUL_CODE;
@@ -74,7 +74,7 @@ CodeStatus MenuFree(Menu *menu)
     return ArrayFree(menu->children);
 }
 
-CodeStatus MenuAdd(const Menu *menu, ApplicationContext *appContext)
+CodeStatus MenuAddAction(const Menu *menu, ApplicationContext *appContext)
 {
     printf("Enter value (0 - Return): ");
     String *newValue = ReadString();
@@ -87,7 +87,7 @@ CodeStatus MenuAdd(const Menu *menu, ApplicationContext *appContext)
     return UNSUCCESSFUL_CODE;
 }
 
-CodeStatus MenuShow(const Menu *menu, ApplicationContext *appContext)
+CodeStatus MenuShowAction(const Menu *menu, ApplicationContext *appContext)
 {
     if (HashTableCount(AppContextHashTable(appContext)) > 0)
         WriteHashTable(AppContextHashTable(appContext));
@@ -97,7 +97,7 @@ CodeStatus MenuShow(const Menu *menu, ApplicationContext *appContext)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus MenuDelete(const Menu *menu, ApplicationContext *appContext)
+CodeStatus MenuDeleteAction(const Menu *menu, ApplicationContext *appContext)
 {
     printf("Enter value (0 - Return): ");
     String *valueString = ReadString();
@@ -111,7 +111,7 @@ CodeStatus MenuDelete(const Menu *menu, ApplicationContext *appContext)
     return UNSUCCESSFUL_CODE;
 }
 
-CodeStatus MenuStats(const Menu *menu, ApplicationContext *appContext)
+CodeStatus MenuStatsAction(const Menu *menu, ApplicationContext *appContext)
 {
     printf("Max collision: %d\n", GetMaxCountCollisions(AppContextHashTable(appContext)));
     WriteEachNodeCollisionWithStats(AppContextHashTable(appContext));
@@ -119,7 +119,7 @@ CodeStatus MenuStats(const Menu *menu, ApplicationContext *appContext)
     return SUCCESSFUL_CODE;
 }
 
-CodeStatus MenuCheck(const Menu *menu, ApplicationContext *appContext)
+CodeStatus MenuCheckAction(const Menu *menu, ApplicationContext *appContext)
 {
     printf("Enter value (0 - Return): ");
     String *valueString = ReadString();
@@ -143,7 +143,7 @@ void ShowChildren(const Menu *menu)
     printf("0 - Return\n");
 }
 
-CodeStatus MenuDefaultProcess(const Menu *menu, ApplicationContext *appContext)
+CodeStatus MenuDefaultAction(const Menu *menu, ApplicationContext *appContext)
 {
     int value = 100;
     ShowChildren(menu);
